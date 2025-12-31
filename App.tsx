@@ -281,9 +281,9 @@ const App: React.FC = () => {
     <div className="min-h-screen transition-colors duration-300 bg-white dark:bg-[#050505] text-slate-900 dark:text-[#f8fafc] animate-fade-in font-sans selection:bg-orange-600 selection:text-white">
       <CustomCursor accentColor={cursorAccent} />
       
-      {/* Navbar */}
-      <nav className="fixed top-0 w-full z-50 glass py-4 px-6 md:px-12 flex justify-between items-center transition-all border-b border-black/5 dark:border-white/5">
-        <div className="flex items-center gap-3 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+      {/* Navbar with Entrance Animation */}
+      <nav className="fixed top-0 w-full z-50 glass py-4 px-6 md:px-12 flex justify-between items-center transition-all border-b border-black/5 dark:border-white/5 animate-slide-down">
+        <div className="flex items-center gap-3 group cursor-pointer animate-fade-in" style={{ animationDelay: '200ms' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center font-bold text-xl italic shadow-lg shadow-orange-600/30 text-white transition-transform group-hover:scale-110">
             A
           </div>
@@ -293,14 +293,14 @@ const App: React.FC = () => {
         </div>
         
         <div className="hidden lg:flex gap-10 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-gray-400">
-          <a href="#work" onClick={(e) => scrollToSection(e, 'work')} className="hover:text-orange-500 transition-colors">Work</a>
-          <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className="hover:text-orange-500 transition-colors">About</a>
-          <button onClick={() => setShowOrderForm(true)} className="hover:text-orange-500 transition-colors font-bold uppercase tracking-[0.2em] text-[11px]">Order</button>
-          <a href="#reviews" onClick={(e) => scrollToSection(e, 'reviews')} className="hover:text-orange-500 transition-colors">Reviews</a>
-          <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className="hover:text-orange-500 transition-colors">Contact</a>
+          <a href="#work" onClick={(e) => scrollToSection(e, 'work')} className="hover:text-orange-500 transition-all hover:-translate-y-0.5 animate-fade-in" style={{ animationDelay: '300ms' }}>Work</a>
+          <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className="hover:text-orange-500 transition-all hover:-translate-y-0.5 animate-fade-in" style={{ animationDelay: '400ms' }}>About</a>
+          <button onClick={() => setShowOrderForm(true)} className="hover:text-orange-500 transition-all hover:-translate-y-0.5 font-bold uppercase tracking-[0.2em] text-[11px] animate-fade-in" style={{ animationDelay: '500ms' }}>Order</button>
+          <a href="#reviews" onClick={(e) => scrollToSection(e, 'reviews')} className="hover:text-orange-500 transition-all hover:-translate-y-0.5 animate-fade-in" style={{ animationDelay: '600ms' }}>Reviews</a>
+          <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className="hover:text-orange-500 transition-all hover:-translate-y-0.5 animate-fade-in" style={{ animationDelay: '700ms' }}>Contact</a>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 animate-fade-in" style={{ animationDelay: '800ms' }}>
           <button 
             onClick={toggleTheme}
             className="p-2.5 rounded-full glass border border-black/10 dark:border-white/10 hover:border-orange-500 dark:hover:border-orange-500 transition-all active:scale-95 group"
@@ -313,9 +313,10 @@ const App: React.FC = () => {
           </button>
           <button 
             onClick={() => setShowOrderForm(true)}
-            className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white px-7 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-105 shadow-lg shadow-orange-600/20 active:scale-95"
+            className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white px-7 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-105 shadow-lg shadow-orange-600/20 active:scale-95 relative overflow-hidden group"
           >
-            Hire Me
+            <span className="relative z-10">Hire Me</span>
+            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
           </button>
         </div>
       </nav>
@@ -326,20 +327,20 @@ const App: React.FC = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl aspect-[1.8/1] bg-red-900/10 rounded-[100%] blur-[140px] pointer-events-none opacity-40 dark:opacity-60 transition-opacity" />
         
         <div className="w-full relative z-10 flex flex-col items-center text-center">
-          <p className="text-[12px] font-bold uppercase tracking-[0.5em] text-slate-400 dark:text-zinc-500 mb-8 transition-all">
+          <p className="text-[12px] font-bold uppercase tracking-[0.5em] text-slate-400 dark:text-zinc-500 mb-8 transition-all animate-fade-in" style={{ animationDelay: '900ms' }}>
             HEY THERE, I AM A
           </p>
-          <div className="mb-8 min-h-[1.2em] flex items-center justify-center">
+          <div className="mb-8 min-h-[1.2em] flex items-center justify-center animate-fade-in" style={{ animationDelay: '1000ms' }}>
             <AnimatedRoles />
           </div>
-          <h1 className="text-5xl md:text-[6rem] font-black leading-none mb-12 tracking-tighter text-slate-900 dark:text-white transition-colors">
+          <h1 className="text-5xl md:text-[6rem] font-black leading-none mb-12 tracking-tighter text-slate-900 dark:text-white transition-colors animate-fade-in" style={{ animationDelay: '1100ms' }}>
             High-Impact <span className="text-orange-600 drop-shadow-[0_0_15px_rgba(234,88,12,0.3)]">Thumbnails</span>
           </h1>
-          <p className="text-lg md:text-xl text-slate-600 dark:text-gray-400 font-medium max-w-3xl leading-relaxed mb-16 px-4 transition-colors">
+          <p className="text-lg md:text-xl text-slate-600 dark:text-gray-400 font-medium max-w-3xl leading-relaxed mb-16 px-4 transition-colors animate-fade-in" style={{ animationDelay: '1200ms' }}>
             I design scroll-stopping YouTube thumbnails that boost your <span className="text-slate-900 dark:text-white font-bold">CTR</span> and grow your channel. <br className="hidden md:block" /> 
             Let's make your videos <span className="text-slate-900 dark:text-white font-bold">impossible to ignore</span>.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-6 w-full">
+          <div className="flex flex-wrap items-center justify-center gap-6 w-full animate-fade-in" style={{ animationDelay: '1300ms' }}>
             <a href="#work" onClick={(e) => scrollToSection(e, 'work')} className="relative group px-12 py-5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl font-black text-xl text-white transition-all shadow-[0_0_30px_rgba(234,88,12,0.2)] hover:shadow-[0_0_50px_rgba(234,88,12,0.4)] hover:scale-[1.05] active:scale-95 flex items-center gap-3">
               See Work!
               <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
@@ -676,8 +677,15 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* Internal Niche Scrollbar Styling */}
+      {/* Custom Keyframe Animations */}
       <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes slideDown {
+          from { transform: translateY(-100%); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-down {
+          animation: slideDown 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
         .custom-scrollbar-niche::-webkit-scrollbar {
           width: 4px;
         }
@@ -697,6 +705,13 @@ const App: React.FC = () => {
         }
         .scale-in {
           animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.8s ease forwards;
         }
       `}} />
     </div>
