@@ -101,7 +101,8 @@ const App: React.FC = () => {
   const [currency, setCurrency] = useState<'INR' | 'USD'>('INR');
   const [pricePerThumb, setPricePerThumb] = useState(1300);
   const [quantity, setQuantity] = useState(1);
-  const [selectedNiches, setSelectedNiches] = useState<string[]>([]);
+  const [selectedNiche, setSelectedNiche] = useState<string | null>(null);
+  const [otherNicheText, setOtherNicheText] = useState('');
 
   const niches = [
     'GAMING (FPS)', 'GAMING (MC/ROBLOX)', 'ANIME', 'TECH', 
@@ -151,10 +152,8 @@ const App: React.FC = () => {
     }
   };
 
-  const toggleNiche = (niche: string) => {
-    setSelectedNiches(prev => 
-      prev.includes(niche) ? prev.filter(n => n !== niche) : [...prev, niche]
-    );
+  const handleNicheSelect = (niche: string) => {
+    setSelectedNiche(prev => prev === niche ? null : niche);
   };
 
   const handleReviewSubmit = (e: React.FormEvent) => {
@@ -180,7 +179,7 @@ const App: React.FC = () => {
   // --- ORDER FORM PAGE VIEW ---
   if (showOrderForm) {
     return (
-      <div className="fixed inset-0 z-[100] bg-[#050505] text-white animate-fade-in selection:bg-red-600 overflow-y-auto overflow-x-hidden">
+      <div className="fixed inset-0 z-[100] bg-[#050505] text-white animate-fade-in selection:bg-purple-600 overflow-y-auto overflow-x-hidden">
         <section className="py-10 md:py-16 px-6 md:px-12 max-w-7xl mx-auto relative min-h-screen">
           {/* Close Button */}
           <button 
@@ -194,7 +193,7 @@ const App: React.FC = () => {
             {/* Form Header */}
             <div className="mb-12 md:mb-20">
               <h2 className="text-6xl md:text-[10rem] font-black tracking-tighter text-white mb-2 leading-[0.85] select-none">
-                Order <span className="text-red-600">Now</span>
+                Order <span className="bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]">Now</span>
               </h2>
               <p className="text-[10px] md:text-[12px] font-bold uppercase tracking-[0.4em] text-zinc-500">
                 PRECISION CREATIVE ASSETS FOR SERIOUS CREATORS.
@@ -207,17 +206,17 @@ const App: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1">Full Name</label>
-                    <input type="text" placeholder="e.g. MrBeast" className="w-full bg-[#111111] border border-white/5 focus:border-red-600/50 rounded-2xl px-6 md:px-8 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
+                    <input type="text" placeholder="e.g. MrBeast" className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-2xl px-6 md:px-8 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1">Email Address</label>
-                    <input type="email" placeholder="contact@channel.com" className="w-full bg-[#111111] border border-white/5 focus:border-red-600/50 rounded-2xl px-6 md:px-8 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
+                    <input type="email" placeholder="contact@channel.com" className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-2xl px-6 md:px-8 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1">Phone / Whatsapp (Mandatory)</label>
-                  <input type="text" placeholder="+91 00000 00000" className="w-full bg-[#111111] border border-white/5 focus:border-red-600/50 rounded-2xl px-6 md:px-8 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
+                  <input type="text" placeholder="+91 00000 00000" className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-2xl px-6 md:px-8 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
                 </div>
 
                 <div className="space-y-4">
@@ -228,9 +227,9 @@ const App: React.FC = () => {
                       {niches.map(niche => (
                         <button
                           key={niche}
-                          onClick={() => toggleNiche(niche)}
+                          onClick={() => handleNicheSelect(niche)}
                           className={`px-5 md:px-7 py-3 md:py-4 rounded-xl text-[10px] md:text-[12px] font-black tracking-wider transition-all border ${
-                            selectedNiches.includes(niche)
+                            selectedNiche === niche
                               ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)] scale-105 z-10'
                               : 'bg-[#1a1a1a] text-zinc-300 border-white/5 hover:border-zinc-700'
                           }`}
@@ -240,16 +239,29 @@ const App: React.FC = () => {
                       ))}
                     </div>
                   </div>
+                  
+                  {/* OTHER OPTION INPUT FIELD */}
+                  {selectedNiche === 'OTHER' && (
+                    <div className="mt-4 animate-fade-in">
+                      <input 
+                        type="text" 
+                        value={otherNicheText}
+                        onChange={(e) => setOtherNicheText(e.target.value)}
+                        placeholder="Please specify your niche..." 
+                        className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-xl px-6 py-4 text-white outline-none transition-all placeholder:text-zinc-700 text-xs font-black uppercase tracking-widest shadow-inner"
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1 block">Reference Links / Competitors</label>
-                  <input type="text" placeholder="https://youtube.com/..." className="w-full bg-[#111111] border border-white/5 focus:border-red-600/50 rounded-2xl px-6 md:px-8 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
+                  <input type="text" placeholder="https://youtube.com/..." className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-2xl px-6 md:px-8 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1 block">Project Details & Notes</label>
-                  <textarea rows={4} placeholder="Describe your vision, colors, and key messaging..." className="w-full bg-[#111111] border border-white/5 focus:border-red-600/50 rounded-[2rem] px-6 md:px-8 py-6 text-white outline-none transition-all placeholder:text-zinc-700 resize-none" />
+                  <textarea rows={4} placeholder="Describe your vision, colors, and key messaging..." className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-[2rem] px-6 md:px-8 py-6 text-white outline-none transition-all placeholder:text-zinc-700 resize-none" />
                 </div>
               </div>
 
@@ -277,8 +289,8 @@ const App: React.FC = () => {
                             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">Price per Thumbnail</p>
                             <p className="text-[11px] text-zinc-600">Starting from {currency === 'INR' ? '₹' : '$'}{currency === 'INR' ? '1,300' : '20'}</p>
                           </div>
-                          <div className="bg-[#111111] border border-red-600/30 px-5 md:px-6 py-3 md:py-4 rounded-2xl shadow-lg shadow-red-600/5">
-                             <span className="text-red-600 font-black text-xl md:text-2xl">{currency === 'INR' ? '₹' : '$'}{pricePerThumb.toLocaleString()}</span>
+                          <div className="bg-[#111111] border border-purple-600/30 px-5 md:px-6 py-3 md:py-4 rounded-2xl shadow-lg shadow-purple-600/5">
+                             <span className="text-purple-500 font-black text-xl md:text-2xl">{currency === 'INR' ? '₹' : '$'}{pricePerThumb.toLocaleString()}</span>
                           </div>
                         </div>
                         <input 
@@ -288,7 +300,7 @@ const App: React.FC = () => {
                           step={currency === 'INR' ? 100 : 5} 
                           value={pricePerThumb} 
                           onChange={(e) => setPricePerThumb(Number(e.target.value))} 
-                          className="w-full h-1.5 bg-[#1a1a1a] rounded-full appearance-none cursor-pointer accent-red-600" 
+                          className="w-full h-1.5 bg-[#1a1a1a] rounded-full appearance-none cursor-pointer accent-purple-600" 
                         />
                       </div>
 
@@ -298,8 +310,8 @@ const App: React.FC = () => {
                             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">Thumbnail Quantity</p>
                             <p className="text-[11px] text-zinc-600">Bulk orders recommended</p>
                           </div>
-                          <div className="bg-[#111111] border border-red-600/30 px-6 md:px-7 py-3 md:py-4 rounded-2xl shadow-lg shadow-red-600/5">
-                             <span className="text-red-600 font-black text-xl md:text-2xl">{quantity}</span>
+                          <div className="bg-[#111111] border border-purple-600/30 px-6 md:px-7 py-3 md:py-4 rounded-2xl shadow-lg shadow-purple-600/5">
+                             <span className="text-purple-500 font-black text-xl md:text-2xl">{quantity}</span>
                           </div>
                         </div>
                         <input 
@@ -308,27 +320,27 @@ const App: React.FC = () => {
                           max="10" 
                           value={quantity} 
                           onChange={(e) => setQuantity(Number(e.target.value))} 
-                          className="w-full h-1.5 bg-[#1a1a1a] rounded-full appearance-none cursor-pointer accent-red-600" 
+                          className="w-full h-1.5 bg-[#1a1a1a] rounded-full appearance-none cursor-pointer accent-purple-600" 
                         />
                       </div>
                     </div>
 
                     <div className="mt-12 pt-12 border-t border-white/5 text-center flex flex-col items-center overflow-visible">
                       <div className="flex items-baseline gap-1 md:gap-2 mb-2">
-                        <span className="text-3xl md:text-5xl font-black text-white/40">{currency === 'INR' ? '₹' : '$'}</span>
-                        <p className="text-7xl md:text-[9rem] font-black text-white tracking-tighter leading-none">
+                        <span className="text-xl md:text-3xl font-black text-white/40">{currency === 'INR' ? '₹' : '$'}</span>
+                        <p className="text-4xl md:text-[4.8rem] font-black text-white tracking-tighter leading-none">
                           {estimatedInvestment.toLocaleString()}
                         </p>
                       </div>
                       <p className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-500">ESTIMATED INVESTMENT</p>
-                      <div className="w-24 h-1.5 bg-red-600 mt-10 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.5)]" />
+                      <div className="w-24 h-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 mt-10 rounded-full shadow-[0_0_15px_rgba(147,51,234,0.5)]" />
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-5">
-                  <button className="w-full py-8 md:py-10 bg-[#2d1212]/30 hover:bg-red-600 transition-all rounded-[2.5rem] text-[12px] md:text-[14px] font-black uppercase tracking-[0.4em] text-red-500 hover:text-white border border-red-600/20 active:scale-[0.97] shadow-xl group">
-                    <span className="group-hover:scale-105 inline-block transition-transform drop-shadow-[0_0_10px_rgba(220,38,38,0.3)]">Confirm Order Inquiry</span>
+                  <button className="w-full py-8 md:py-10 bg-purple-900/20 hover:bg-gradient-to-r hover:from-purple-600 hover:to-indigo-600 transition-all rounded-[2.5rem] text-[12px] md:text-[14px] font-black uppercase tracking-[0.4em] text-purple-400 hover:text-white border border-purple-600/20 active:scale-[0.97] shadow-xl group">
+                    <span className="group-hover:scale-105 inline-block transition-transform drop-shadow-[0_0_10px_rgba(147,51,234,0.3)]">Confirm Order Inquiry</span>
                   </button>
                   <p className="text-center text-[9px] font-bold text-zinc-700 tracking-[0.3em] uppercase">
                     SECURE 256-BIT ENCRYPTED TRANSMISSION
@@ -348,11 +360,11 @@ const App: React.FC = () => {
             background: transparent;
           }
           .custom-scrollbar-niche::-webkit-scrollbar-thumb {
-            background: rgba(220, 38, 38, 0.2);
+            background: rgba(147, 51, 234, 0.2);
             border-radius: 10px;
           }
           .custom-scrollbar-niche::-webkit-scrollbar-thumb:hover {
-            background: rgba(220, 38, 38, 0.5);
+            background: rgba(147, 51, 234, 0.5);
           }
         `}} />
       </div>
