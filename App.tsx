@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Zap, 
   MousePointer2, 
@@ -11,22 +11,16 @@ import {
   TrendingUp, 
   Mail, 
   Phone, 
-  Clock, 
   Send,
   Star,
   Instagram,
-  Twitter,
-  Github,
   ChevronRight,
-  Image,
-  Palette,
-  MousePointerClick,
-  Layers,
-  Sparkles,
   Sun,
   Moon,
   ArrowRight,
-  Play
+  X,
+  Info,
+  ArrowLeft
 } from 'lucide-react';
 import { CATEGORIES, THUMBNAILS, SKILLS, FEATURES } from './constants';
 import { Category, ThumbnailItem, Review } from './types';
@@ -83,13 +77,13 @@ const AnimatedRoles = () => {
       setTimeout(() => {
         setIndex((prev) => (prev + 1) % roles.length);
         setFade(true);
-      }, 300); // Wait for fade out before changing text
-    }, 1300); // 1s visible + 0.3s transition
+      }, 300);
+    }, 1300);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className={`text-4xl md:text-7xl font-black tracking-tight transition-all duration-300 transform ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} bg-gradient-to-r from-slate-900 via-slate-700 to-slate-400 dark:from-white dark:via-white dark:to-white/40 bg-clip-text text-transparent`}>
+    <div className={`text-4xl md:text-7xl font-black tracking-tight transition-all duration-300 transform ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} text-slate-900 dark:text-white`}>
       {roles[index]}
     </div>
   );
@@ -97,26 +91,71 @@ const AnimatedRoles = () => {
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme');
-      return savedTheme ? savedTheme === 'dark' : true;
-    }
-    return true;
-  });
+  const [isDark, setIsDark] = useState(true);
+  const [showOrderForm, setShowOrderForm] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category>('All');
   const [reviews, setReviews] = useState<Review[]>([]);
   const [newReview, setNewReview] = useState({ name: '', text: '', rating: 5 });
 
+  // Order Form State
+  const [currency, setCurrency] = useState<'INR' | 'USD'>('INR');
+  const [pricePerThumb, setPricePerThumb] = useState(1300);
+  const [quantity, setQuantity] = useState(1);
+  const [selectedNiches, setSelectedNiches] = useState<string[]>([]);
+
+  const niches = [
+    'GAMING (FPS)', 'GAMING (MC/ROBLOX)', 'ANIME', 'TECH', 
+    'FINANCE', 'CRYPTO', 'BUSINESS', 'IRL/VLOG', 'DOCUMENTARY',
+    'REACTION', 'LIFESTYLE', 'EDUCATIONAL', 'FITNESS', 'COOKING',
+    'TRAVEL', 'MUSIC', 'COMEDY', 'PODCAST', 'REAL ESTATE', 'NEWS', 'OTHER'
+  ];
+
+  // Helper to sync price when currency changes to prevent "glitchy" numbers
+  useEffect(() => {
+    if (currency === 'INR') {
+      setPricePerThumb(1300);
+    } else {
+      setPricePerThumb(20);
+    }
+  }, [currency]);
+
+  const estimatedInvestment = useMemo(() => {
+    return pricePerThumb * quantity;
+  }, [pricePerThumb, quantity]);
+
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
     }
   }, [isDark]);
+
+  useEffect(() => {
+    if (showOrderForm) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [showOrderForm]);
+
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 90;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    }
+  };
+
+  const toggleNiche = (niche: string) => {
+    setSelectedNiches(prev => 
+      prev.includes(niche) ? prev.filter(n => n !== niche) : [...prev, niche]
+    );
+  };
 
   const handleReviewSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,11 +177,194 @@ const App: React.FC = () => {
     return <LoadingScreen onComplete={() => setIsLoading(false)} />;
   }
 
+  // --- ORDER FORM PAGE VIEW ---
+  if (showOrderForm) {
+    return (
+      <div className="fixed inset-0 z-[100] bg-[#050505] text-white animate-fade-in selection:bg-red-600 overflow-y-auto overflow-x-hidden">
+        <section className="py-10 md:py-16 px-6 md:px-12 max-w-7xl mx-auto relative min-h-screen">
+          {/* Close Button */}
+          <button 
+            onClick={() => setShowOrderForm(false)}
+            className="fixed top-8 right-8 z-[110] w-12 h-12 md:w-14 md:h-14 bg-[#111111] border border-white/10 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all group shadow-2xl active:scale-90"
+          >
+            <X className="w-6 h-6 md:w-7 md:h-7 group-hover:rotate-90 transition-transform" />
+          </button>
+
+          <div className="relative">
+            {/* Form Header */}
+            <div className="mb-12 md:mb-20">
+              <h2 className="text-6xl md:text-[10rem] font-black tracking-tighter text-white mb-2 leading-[0.85] select-none">
+                Order <span className="text-red-600">Now</span>
+              </h2>
+              <p className="text-[10px] md:text-[12px] font-bold uppercase tracking-[0.4em] text-zinc-500">
+                PRECISION CREATIVE ASSETS FOR SERIOUS CREATORS.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-20 pb-20">
+              {/* Left Column: Form Info */}
+              <div className="lg:col-span-7 space-y-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1">Full Name</label>
+                    <input type="text" placeholder="e.g. MrBeast" className="w-full bg-[#111111] border border-white/5 focus:border-red-600/50 rounded-2xl px-6 md:px-8 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1">Email Address</label>
+                    <input type="email" placeholder="contact@channel.com" className="w-full bg-[#111111] border border-white/5 focus:border-red-600/50 rounded-2xl px-6 md:px-8 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1">Phone / Whatsapp (Mandatory)</label>
+                  <input type="text" placeholder="+91 00000 00000" className="w-full bg-[#111111] border border-white/5 focus:border-red-600/50 rounded-2xl px-6 md:px-8 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
+                </div>
+
+                <div className="space-y-4">
+                  <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1 block">Select Your Niche</label>
+                  {/* SCROLLABLE NICHE SECTION */}
+                  <div className="max-h-[300px] overflow-y-auto pr-2 custom-scrollbar-niche">
+                    <div className="flex flex-wrap gap-2 md:gap-3 p-1">
+                      {niches.map(niche => (
+                        <button
+                          key={niche}
+                          onClick={() => toggleNiche(niche)}
+                          className={`px-5 md:px-7 py-3 md:py-4 rounded-xl text-[10px] md:text-[12px] font-black tracking-wider transition-all border ${
+                            selectedNiches.includes(niche)
+                              ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)] scale-105 z-10'
+                              : 'bg-[#1a1a1a] text-zinc-300 border-white/5 hover:border-zinc-700'
+                          }`}
+                        >
+                          {niche}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1 block">Reference Links / Competitors</label>
+                  <input type="text" placeholder="https://youtube.com/..." className="w-full bg-[#111111] border border-white/5 focus:border-red-600/50 rounded-2xl px-6 md:px-8 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1 block">Project Details & Notes</label>
+                  <textarea rows={4} placeholder="Describe your vision, colors, and key messaging..." className="w-full bg-[#111111] border border-white/5 focus:border-red-600/50 rounded-[2rem] px-6 md:px-8 py-6 text-white outline-none transition-all placeholder:text-zinc-700 resize-none" />
+                </div>
+              </div>
+
+              {/* Right Column: Pricing Engine */}
+              <div className="lg:col-span-5 flex flex-col gap-8">
+                <div className="space-y-10 p-8 md:p-10 bg-[#080808] rounded-[3.5rem] border border-white/5 relative overflow-hidden flex-1 shadow-2xl">
+                  {/* Watermark */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none">
+                    <span className="text-[12rem] md:text-[15rem] font-black tracking-tighter select-none">GFX</span>
+                  </div>
+
+                  <div className="relative z-10 space-y-10">
+                    <div className="flex justify-between items-center">
+                      <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Investment Bracket</h4>
+                      <div className="flex bg-[#111111] rounded-xl p-1 border border-white/5">
+                        <button onClick={() => setCurrency('INR')} className={`px-5 py-2 rounded-lg text-[10px] font-black transition-all ${currency === 'INR' ? 'bg-white text-black shadow-lg' : 'text-zinc-500'}`}>INR</button>
+                        <button onClick={() => setCurrency('USD')} className={`px-5 py-2 rounded-lg text-[10px] font-black transition-all ${currency === 'USD' ? 'bg-white text-black shadow-lg' : 'text-zinc-500'}`}>USD</button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-8">
+                      <div className="space-y-6">
+                        <div className="flex justify-between items-end">
+                          <div>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">Price per Thumbnail</p>
+                            <p className="text-[11px] text-zinc-600">Starting from {currency === 'INR' ? '₹' : '$'}{currency === 'INR' ? '1,300' : '20'}</p>
+                          </div>
+                          <div className="bg-[#111111] border border-red-600/30 px-5 md:px-6 py-3 md:py-4 rounded-2xl shadow-lg shadow-red-600/5">
+                             <span className="text-red-600 font-black text-xl md:text-2xl">{currency === 'INR' ? '₹' : '$'}{pricePerThumb.toLocaleString()}</span>
+                          </div>
+                        </div>
+                        <input 
+                          type="range" 
+                          min={currency === 'INR' ? 1300 : 20} 
+                          max={currency === 'INR' ? 10000 : 150} 
+                          step={currency === 'INR' ? 100 : 5} 
+                          value={pricePerThumb} 
+                          onChange={(e) => setPricePerThumb(Number(e.target.value))} 
+                          className="w-full h-1.5 bg-[#1a1a1a] rounded-full appearance-none cursor-pointer accent-red-600" 
+                        />
+                      </div>
+
+                      <div className="space-y-6">
+                        <div className="flex justify-between items-end">
+                          <div>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">Thumbnail Quantity</p>
+                            <p className="text-[11px] text-zinc-600">Bulk orders recommended</p>
+                          </div>
+                          <div className="bg-[#111111] border border-red-600/30 px-6 md:px-7 py-3 md:py-4 rounded-2xl shadow-lg shadow-red-600/5">
+                             <span className="text-red-600 font-black text-xl md:text-2xl">{quantity}</span>
+                          </div>
+                        </div>
+                        <input 
+                          type="range" 
+                          min="1" 
+                          max="10" 
+                          value={quantity} 
+                          onChange={(e) => setQuantity(Number(e.target.value))} 
+                          className="w-full h-1.5 bg-[#1a1a1a] rounded-full appearance-none cursor-pointer accent-red-600" 
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-12 pt-12 border-t border-white/5 text-center flex flex-col items-center overflow-visible">
+                      <div className="flex items-baseline gap-1 md:gap-2 mb-2">
+                        <span className="text-3xl md:text-5xl font-black text-white/40">{currency === 'INR' ? '₹' : '$'}</span>
+                        <p className="text-7xl md:text-[9rem] font-black text-white tracking-tighter leading-none">
+                          {estimatedInvestment.toLocaleString()}
+                        </p>
+                      </div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-500">ESTIMATED INVESTMENT</p>
+                      <div className="w-24 h-1.5 bg-red-600 mt-10 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.5)]" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-5">
+                  <button className="w-full py-8 md:py-10 bg-[#2d1212]/30 hover:bg-red-600 transition-all rounded-[2.5rem] text-[12px] md:text-[14px] font-black uppercase tracking-[0.4em] text-red-500 hover:text-white border border-red-600/20 active:scale-[0.97] shadow-xl group">
+                    <span className="group-hover:scale-105 inline-block transition-transform drop-shadow-[0_0_10px_rgba(220,38,38,0.3)]">Confirm Order Inquiry</span>
+                  </button>
+                  <p className="text-center text-[9px] font-bold text-zinc-700 tracking-[0.3em] uppercase">
+                    SECURE 256-BIT ENCRYPTED TRANSMISSION
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Internal Niche Scrollbar Styling */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          .custom-scrollbar-niche::-webkit-scrollbar {
+            width: 4px;
+          }
+          .custom-scrollbar-niche::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .custom-scrollbar-niche::-webkit-scrollbar-thumb {
+            background: rgba(220, 38, 38, 0.2);
+            border-radius: 10px;
+          }
+          .custom-scrollbar-niche::-webkit-scrollbar-thumb:hover {
+            background: rgba(220, 38, 38, 0.5);
+          }
+        `}} />
+      </div>
+    );
+  }
+
+  // --- MAIN PORTFOLIO PAGE ---
   return (
     <div className="min-h-screen transition-colors duration-300 bg-white dark:bg-[#050505] text-slate-900 dark:text-[#f8fafc] animate-fade-in font-sans selection:bg-orange-600 selection:text-white">
       {/* Navbar */}
       <nav className="fixed top-0 w-full z-50 glass py-4 px-6 md:px-12 flex justify-between items-center transition-all border-b border-black/5 dark:border-white/5">
-        <div className="flex items-center gap-3 group cursor-pointer">
+        <div className="flex items-center gap-3 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center font-bold text-xl italic shadow-lg shadow-orange-600/30 text-white transition-transform group-hover:scale-110">
             A
           </div>
@@ -152,17 +374,17 @@ const App: React.FC = () => {
         </div>
         
         <div className="hidden lg:flex gap-10 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-gray-400">
-          <a href="#work" className="hover:text-orange-500 transition-colors">Work</a>
-          <a href="#about" className="hover:text-orange-500 transition-colors">About</a>
-          <a href="#reviews" className="hover:text-orange-500 transition-colors">Reviews</a>
-          <a href="#contact" className="hover:text-orange-500 transition-colors">Contact</a>
+          <a href="#work" onClick={(e) => scrollToSection(e, 'work')} className="hover:text-orange-500 transition-colors">Work</a>
+          <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className="hover:text-orange-500 transition-colors">About</a>
+          <button onClick={() => setShowOrderForm(true)} className="hover:text-orange-500 transition-colors font-bold uppercase tracking-[0.2em] text-[11px]">Order</button>
+          <a href="#reviews" onClick={(e) => scrollToSection(e, 'reviews')} className="hover:text-orange-500 transition-colors">Reviews</a>
+          <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className="hover:text-orange-500 transition-colors">Contact</a>
         </div>
 
         <div className="flex items-center gap-4">
           <button 
             onClick={toggleTheme}
             className="p-2.5 rounded-full glass border border-black/10 dark:border-white/10 hover:border-orange-500 dark:hover:border-orange-500 transition-all active:scale-95 group"
-            aria-label="Toggle Theme"
           >
             {isDark ? (
               <Sun className="w-5 h-5 text-gray-400 group-hover:text-orange-500 transition-colors" />
@@ -170,53 +392,47 @@ const App: React.FC = () => {
               <Moon className="w-5 h-5 text-slate-700 group-hover:text-orange-500 transition-colors" />
             )}
           </button>
-          <button className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white px-7 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-105 shadow-lg shadow-orange-600/20 active:scale-95">
+          <button 
+            onClick={() => setShowOrderForm(true)}
+            className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white px-7 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-105 shadow-lg shadow-orange-600/20 active:scale-95"
+          >
             Hire Me
           </button>
         </div>
       </nav>
 
-      {/* HERO SECTION WITH ANIMATED HIERARCHY */}
+      {/* Hero */}
       <section className="relative min-h-[90vh] flex items-center justify-center pt-32 pb-20 px-6 md:px-12 max-w-7xl mx-auto overflow-hidden">
-        {/* Cinematic Background Elements */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-full max-w-4xl h-80 bg-orange-600/5 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl aspect-[2/1] bg-red-950/40 rounded-[100%] blur-[120px] pointer-events-none opacity-60 dark:opacity-80 transition-opacity" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl aspect-[1.8/1] bg-red-900/10 rounded-[100%] blur-[140px] pointer-events-none opacity-40 dark:opacity-60 transition-opacity" />
         
         <div className="w-full relative z-10 flex flex-col items-center text-center">
-          {/* Subtitle */}
           <p className="text-[12px] font-bold uppercase tracking-[0.5em] text-slate-400 dark:text-zinc-500 mb-8 transition-all">
             HEY THERE, I AM A
           </p>
-          
-          {/* Main Animated Role */}
           <div className="mb-8 min-h-[1.2em] flex items-center justify-center">
             <AnimatedRoles />
           </div>
-
-          {/* Focal Point Headline */}
           <h1 className="text-5xl md:text-[6rem] font-black leading-none mb-12 tracking-tighter text-slate-900 dark:text-white transition-colors">
             High-Impact <span className="text-orange-600 drop-shadow-[0_0_15px_rgba(234,88,12,0.3)]">Thumbnails</span>
           </h1>
-
-          {/* Subheading */}
           <p className="text-lg md:text-xl text-slate-600 dark:text-gray-400 font-medium max-w-3xl leading-relaxed mb-16 px-4 transition-colors">
             I design scroll-stopping YouTube thumbnails that boost your <span className="text-slate-900 dark:text-white font-bold">CTR</span> and grow your channel. <br className="hidden md:block" /> 
             Let's make your videos <span className="text-slate-900 dark:text-white font-bold">impossible to ignore</span>.
           </p>
-
-          {/* Call to Actions */}
           <div className="flex flex-wrap items-center justify-center gap-6 w-full">
-            <a href="#work" className="relative group px-12 py-5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl font-black text-xl text-white transition-all shadow-[0_0_30px_rgba(234,88,12,0.2)] hover:shadow-[0_0_50px_rgba(234,88,12,0.4)] hover:scale-[1.05] active:scale-95 flex items-center gap-3">
-              Browse Portfolio
+            <a href="#work" onClick={(e) => scrollToSection(e, 'work')} className="relative group px-12 py-5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl font-black text-xl text-white transition-all shadow-[0_0_30px_rgba(234,88,12,0.2)] hover:shadow-[0_0_50px_rgba(234,88,12,0.4)] hover:scale-[1.05] active:scale-95 flex items-center gap-3">
+              See Work!
               <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </a>
-            <a href="#contact" className="px-12 py-5 glass border border-black/10 dark:border-white/10 rounded-2xl font-bold text-xl text-slate-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all active:scale-95">
-              Contact GFX
-            </a>
+            <button onClick={() => setShowOrderForm(true)} className="px-12 py-5 glass border border-black/10 dark:border-white/10 rounded-2xl font-bold text-xl text-slate-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all active:scale-95">
+              Order Now
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats */}
       <section className="py-20 px-6 md:px-12 bg-slate-50 dark:bg-[#080808] border-y border-black/5 dark:border-white/5 transition-colors">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between gap-12 items-center">
           <StatBox icon={<Youtube className="w-8 h-8 text-red-600" />} value="10M+" label="Views Generated" />
@@ -226,14 +442,9 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* Portfolio Grid */}
+      {/* Portfolio */}
       <section id="work" className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
-        <SectionHeading 
-          title="Recent Work" 
-          subtitle="Explore the visuals that helped creators scale their channels to new heights."
-          center
-        />
-
+        <SectionHeading title="Recent Work" center />
         <div className="flex flex-wrap justify-center gap-3 mb-12">
           {CATEGORIES.map(category => (
             <button
@@ -249,7 +460,6 @@ const App: React.FC = () => {
             </button>
           ))}
         </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {(selectedCategory === 'All' ? THUMBNAILS : THUMBNAILS.filter(t => t.category === selectedCategory)).map(thumb => (
             <ThumbnailCard key={thumb.id} item={thumb} />
@@ -265,16 +475,11 @@ const App: React.FC = () => {
             {SKILLS.map((skill, i) => (
               <div key={i} className="group">
                 <div className="flex justify-between items-center mb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="font-bold text-slate-700 dark:text-gray-300 group-hover:text-orange-600 dark:group-hover:text-white transition-colors uppercase tracking-widest text-xs">{skill.name}</span>
-                  </div>
+                  <span className="font-bold text-slate-700 dark:text-gray-300 group-hover:text-orange-600 dark:group-hover:text-white transition-colors uppercase tracking-widest text-xs">{skill.name}</span>
                   <span className="text-orange-500 font-black text-xs">{skill.percentage}%</span>
                 </div>
                 <div className="h-2 w-full bg-black/5 dark:bg-white/5 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-gradient-to-r from-orange-600 to-red-600 rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(234,88,12,0.3)]"
-                    style={{ width: `${skill.percentage}%` }}
-                  />
+                  <div className="h-full bg-gradient-to-r from-orange-600 to-red-600 rounded-full transition-all duration-1000" style={{ width: `${skill.percentage}%` }} />
                 </div>
               </div>
             ))}
@@ -301,36 +506,19 @@ const App: React.FC = () => {
           <div className="glass p-10 rounded-3xl border border-black/10 dark:border-white/5 shadow-xl">
             <h3 className="text-2xl font-bold mb-8 text-slate-900 dark:text-white">Post a Review</h3>
             <form onSubmit={handleReviewSubmit} className="space-y-6">
-              <input 
-                type="text" 
-                value={newReview.name}
-                onChange={e => setNewReview({...newReview, name: e.target.value})}
-                className="w-full glass border border-black/10 dark:border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-orange-600 transition-colors text-slate-900 dark:text-white bg-transparent"
-                placeholder="Channel Name"
-              />
+              <input type="text" value={newReview.name} onChange={e => setNewReview({...newReview, name: e.target.value})} className="w-full glass border border-black/10 dark:border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-orange-600 transition-colors text-slate-900 dark:text-white bg-transparent outline-none" placeholder="Channel Name" />
               <div className="flex gap-2">
                 {[1,2,3,4,5].map(s => (
-                  <Star 
-                    key={s} 
-                    onClick={() => setNewReview({...newReview, rating: s})}
-                    className={`w-8 h-8 cursor-pointer transition-all ${newReview.rating >= s ? 'text-yellow-500 fill-yellow-500' : 'text-slate-300 dark:text-gray-700'}`} 
-                  />
+                  <Star key={s} onClick={() => setNewReview({...newReview, rating: s})} className={`w-8 h-8 cursor-pointer transition-all ${newReview.rating >= s ? 'text-yellow-500 fill-yellow-500' : 'text-slate-300 dark:text-gray-700'}`} />
                 ))}
               </div>
-              <textarea 
-                rows={4}
-                value={newReview.text}
-                onChange={e => setNewReview({...newReview, text: e.target.value})}
-                className="w-full glass border border-black/10 dark:border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-orange-600 transition-colors resize-none text-slate-900 dark:text-white bg-transparent"
-                placeholder="Share your experience..."
-              />
+              <textarea rows={4} value={newReview.text} onChange={e => setNewReview({...newReview, text: e.target.value})} className="w-full glass border border-black/10 dark:border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-orange-600 transition-colors resize-none text-slate-900 dark:text-white bg-transparent outline-none" placeholder="Share your experience..." />
               <button className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-5 rounded-2xl transition-all flex items-center justify-center gap-2 group shadow-lg shadow-orange-600/20">
                 Send Review
                 <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </button>
             </form>
           </div>
-
           <div className="space-y-6 max-h-[600px] overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-orange-600">
             {reviews.map(review => (
               <div key={review.id} className="glass p-8 rounded-2xl border border-black/10 dark:border-white/5 transition-all shadow-md">
@@ -368,16 +556,16 @@ const App: React.FC = () => {
       {/* Footer */}
       <footer className="py-12 px-6 md:px-12 bg-slate-900 dark:bg-black border-t border-black/5 dark:border-white/5 transition-colors">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <div className="w-8 h-8 bg-orange-600 rounded flex items-center justify-center font-bold text-lg italic text-white">A</div>
             <span className="font-black text-lg tracking-tighter uppercase text-white">
               AYUSH <span className="font-light tracking-widest text-orange-500">GFX</span>
             </span>
           </div>
           <div className="flex gap-8 text-[11px] text-gray-400 uppercase tracking-widest font-black">
-            <a href="#work" className="hover:text-orange-500 transition-colors">Work</a>
-            <a href="#about" className="hover:text-orange-500 transition-colors">About</a>
-            <a href="#contact" className="hover:text-orange-500 transition-colors">Contact</a>
+            <a href="#work" onClick={(e) => scrollToSection(e, 'work')} className="hover:text-orange-500 transition-colors">Work</a>
+            <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className="hover:text-orange-500 transition-colors">About</a>
+            <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className="hover:text-orange-500 transition-colors">Contact</a>
           </div>
           <p className="text-xs text-gray-500 font-bold tracking-widest uppercase">
             © {new Date().getFullYear()} AYUSH GFX. All Rights Reserved.
@@ -407,20 +595,12 @@ const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => (
       </span>
     </div>
     <div className="aspect-video overflow-hidden">
-      <img 
-        src={item.imageUrl} 
-        alt={item.title} 
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-      />
+      <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
     </div>
     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
       <div>
-        <h3 className="text-2xl font-black text-white mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-          {item.title}
-        </h3>
-        <p className="text-xs text-orange-500 font-bold tracking-widest uppercase flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">
-          View Detail <ChevronRight className="w-3 h-3" />
-        </p>
+        <h3 className="text-2xl font-black text-white mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{item.title}</h3>
+        <p className="text-xs text-orange-500 font-bold tracking-widest uppercase flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">View Detail <ChevronRight className="w-3 h-3" /></p>
       </div>
     </div>
   </div>
@@ -442,9 +622,7 @@ const FeatureCard: React.FC<{ title: string, description: string, icon: string }
 const ContactLink: React.FC<{ icon: React.ReactNode, label: string, value: string }> = ({ icon, label, value }) => (
   <a href="#" className="flex flex-col items-center gap-4 group">
     <div className="w-20 h-20 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-3xl flex items-center justify-center group-hover:bg-orange-600 group-hover:scale-110 transition-all">
-      <div className="text-slate-500 dark:text-gray-400 group-hover:text-white transition-colors">
-        {React.cloneElement(icon as React.ReactElement, { size: 32 })}
-      </div>
+      <div className="text-slate-500 dark:text-gray-400 group-hover:text-white transition-colors">{React.cloneElement(icon as React.ReactElement, { size: 32 })}</div>
     </div>
     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-gray-500 group-hover:text-orange-500 transition-colors">{label}</p>
     <p className="text-lg font-bold text-slate-900 dark:text-white/80 transition-colors">{value}</p>
