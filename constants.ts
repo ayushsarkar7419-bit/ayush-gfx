@@ -12,7 +12,7 @@ export const THUMBNAILS: ThumbnailItem[] = [
     // REPLACE THE URL BELOW WITH YOUR UPLOADED IMAGE PATH
     // Example for local file in public folder: '/my-minecraft-thumbnail.jpg'
     // -------------------------------------------------------------------------
-    imageUrl: 'https://images.unsplash.com/photo-1607988795621-e0050d562137?q=80&w=1000&auto=format&fit=crop', 
+    imageUrl: 'https://ibb.co/WW9sh6Vz', 
     ctr: '18.4% CTR'
   },
   { 
