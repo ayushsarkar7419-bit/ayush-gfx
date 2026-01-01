@@ -34,15 +34,15 @@ import { Category, ThumbnailItem, Review } from './types';
 import { SectionHeading } from './components/SectionHeading';
 
 /**
- * BRAND LOGO SOURCE
+ * BRAND LOGO SOURCE - Updated with new profile photo
  */
-const USER_PHOTO = "https://raw.githubusercontent.com/StackBlitz/stackblitz-images/main/ayush-gfx-portrait.jpg";
+const USER_PHOTO = "https://raw.githubusercontent.com/StackBlitz/stackblitz-images/main/ayush-gfx-portrait-new.jpg";
 
 const LogoImage: React.FC<{ className?: string }> = ({ className = "w-full h-full object-cover" }) => {
   const [error, setError] = useState(false);
   
   return (
-    <div className="w-full h-full relative bg-zinc-900 flex items-center justify-center">
+    <div className="w-full h-full relative bg-[#FF4D00] flex items-center justify-center">
       {!error ? (
         <img 
           src={USER_PHOTO} 
@@ -52,7 +52,7 @@ const LogoImage: React.FC<{ className?: string }> = ({ className = "w-full h-ful
           loading="eager"
         />
       ) : (
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-600 to-red-600">
+        <div className="w-full h-full flex items-center justify-center">
           <User className="text-white w-1/2 h-1/2" />
         </div>
       )}
@@ -124,10 +124,8 @@ const App: React.FC = () => {
   const [isDark, setIsDark] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const [showOrderForm, setShowOrderForm] = useState(false);
-  const [isPaying, setIsPaying] = useState(false);
   const [paymentStep, setPaymentStep] = useState<'checkout' | 'processing' | 'success'>('checkout');
   const [selectedCategory, setSelectedCategory] = useState<Category>('All');
-  const [skillsVisible, setSkillsVisible] = useState(false);
   const skillsRef = useRef<HTMLElement>(null);
 
   // Order Form State
@@ -171,23 +169,6 @@ const App: React.FC = () => {
     }
   }, [showOrderForm]);
 
-  useEffect(() => {
-    if (isLoading) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setSkillsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
-    if (skillsRef.current) {
-      observer.observe(skillsRef.current);
-    }
-    return () => observer.disconnect();
-  }, [isLoading]);
-
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, id: string) => {
     e.preventDefault();
     const element = document.getElementById(id);
@@ -230,17 +211,15 @@ const App: React.FC = () => {
           ? 'bg-white/85 dark:bg-black/85 backdrop-blur-2xl py-3 border-black/10 dark:border-white/10 shadow-xl' 
           : 'bg-transparent py-5 border-transparent'
       }`}>
-        <div className="flex items-center gap-4 group animate-fade-in cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <div className="w-12 h-12 rounded-xl overflow-hidden border border-orange-600/40 shadow-xl shadow-orange-600/5 transition-all group-hover:scale-110 group-hover:border-orange-500 group-hover:shadow-orange-600/20 p-0.5 bg-gradient-to-br from-orange-600 to-red-600">
-            <div className="w-full h-full rounded-[0.55rem] overflow-hidden bg-black">
-              <LogoImage />
-            </div>
+        <div className="flex items-center gap-3 group animate-fade-in cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <div className="w-11 h-11 rounded-xl overflow-hidden shadow-xl transition-all group-hover:scale-105 group-hover:shadow-orange-600/20 bg-[#FF4D00]">
+            <LogoImage />
           </div>
           <div className="flex flex-col">
-            <span className="font-black text-xl tracking-tighter uppercase text-slate-900 dark:text-white leading-none">
-              AYUSH <span className="font-light tracking-widest text-orange-500 ml-1">GFX</span>
+            <span className="font-black text-[1.15rem] tracking-tight uppercase text-slate-900 dark:text-white leading-none">
+              AYUSH <span className="text-[#FF4D00] ml-0.5">GFX</span>
             </span>
-            <span className="text-[8px] font-black tracking-[0.4em] text-zinc-500 uppercase mt-0.5">Premium Visuals</span>
+            <span className="text-[8px] font-black tracking-[0.25em] text-zinc-500 uppercase mt-1">Premium Visuals</span>
           </div>
         </div>
         
@@ -264,10 +243,10 @@ const App: React.FC = () => {
           </button>
           <button 
             onClick={() => setShowOrderForm(true)}
-            className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white px-7 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-105 shadow-lg shadow-orange-600/20 active:scale-95 relative overflow-hidden group"
+            className="bg-[#FF4D00] hover:bg-orange-600 text-white px-7 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-105 shadow-lg shadow-orange-600/20 active:scale-95 relative overflow-hidden group"
           >
             <span className="relative z-10">Hire Me</span>
-            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+            <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
           </button>
         </div>
       </nav>
@@ -309,7 +288,7 @@ const App: React.FC = () => {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all border ${
+              className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border ${
                 selectedCategory === category 
                   ? 'bg-orange-600 border-orange-600 text-white shadow-xl shadow-orange-600/20' 
                   : 'bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-slate-600 dark:text-gray-400 hover:border-orange-500/50'
@@ -319,40 +298,30 @@ const App: React.FC = () => {
             </button>
           ))}
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
           {(selectedCategory === 'All' ? THUMBNAILS : THUMBNAILS.filter(t => t.category === selectedCategory)).map(thumb => (
             <ThumbnailCard key={thumb.id} item={thumb} />
           ))}
         </div>
       </section>
 
-      {/* NEW ABOUT ME SECTION - EXACT MATCH TO PROVIDED IMAGE */}
+      {/* ABOUT ME SECTION */}
       <section id="about" className="py-24 px-6 md:px-12 bg-[#050505] relative overflow-hidden">
-        {/* Background glow */}
         <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-red-900/10 blur-[120px] rounded-full pointer-events-none -translate-y-1/2" />
-        
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
-            
-            {/* Left side: Cinematic Image with badges */}
             <div className="lg:col-span-5 flex justify-center lg:justify-start">
               <div className="relative w-full max-w-[420px]">
-                
-                {/* Floating Badge: Available Now */}
                 <div className="absolute -top-4 -right-8 z-30 bg-black/40 backdrop-blur-xl border border-white/10 px-4 py-1.5 rounded-full flex items-center gap-2 animate-bounce-slow shadow-2xl">
                   <div className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_#22c55e]" />
                   <span className="text-[10px] font-bold text-white uppercase tracking-wider">Available Now</span>
                 </div>
-
-                {/* Floating Badge: YouTube Pro */}
                 <div className="absolute bottom-1/3 -right-12 z-30 bg-black/40 backdrop-blur-xl border border-white/10 px-5 py-2.5 rounded-2xl flex items-center gap-3 shadow-2xl group transition-transform hover:scale-105">
                   <div className="w-8 h-8 bg-red-600/20 flex items-center justify-center rounded-lg border border-red-600/40">
                     <Play className="w-4 h-4 text-red-600 fill-red-600" />
                   </div>
                   <span className="text-xs font-black text-white uppercase tracking-widest">YouTube Pro</span>
                 </div>
-
-                {/* Floating Badge: Rating */}
                 <div className="absolute -bottom-6 -left-6 z-30 bg-black/40 backdrop-blur-xl border border-white/10 p-4 rounded-3xl shadow-2xl flex items-center gap-3">
                    <div className="flex gap-1">
                       {[...Array(5)].map((_, i) => (
@@ -361,37 +330,27 @@ const App: React.FC = () => {
                    </div>
                    <span className="text-sm font-black text-white">4.7 Rating</span>
                 </div>
-
-                {/* Main Image Frame */}
                 <div className="relative z-10 aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl bg-zinc-950">
                   <LogoImage className="w-full h-full object-cover grayscale-[0.2] contrast-125" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 </div>
-                
-                {/* Visual Outline Box */}
                 <div className="absolute -inset-4 border border-white/5 rounded-[3rem] pointer-events-none" />
               </div>
             </div>
-
-            {/* Right side: Content */}
             <div className="lg:col-span-7 space-y-10">
               <div className="space-y-6">
                 <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
                   <Sparkles className="w-4 h-4 text-orange-500" />
                   <span className="text-[11px] font-black text-white/80 uppercase tracking-widest">YouTube Thumbnail Expert</span>
                 </div>
-                
                 <h2 className="text-5xl md:text-7xl font-black text-white leading-[1.1] tracking-tighter">
                   Thumbnails that<br />
                   <span className="bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent italic">Get Clicks</span>
                 </h2>
-                
                 <p className="text-lg md:text-xl text-gray-400 font-medium max-w-xl leading-relaxed">
                   I design scroll-stopping YouTube thumbnails that boost your <span className="text-white font-bold">CTR</span> and grow your channel. Let's make your videos <span className="text-white font-bold">impossible to ignore</span>.
                 </p>
               </div>
-
-              {/* Stat Cards Row */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                  <div className="bg-white/5 border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center transition-all hover:bg-white/10">
                     <div className="text-orange-500 mb-3"><Youtube className="w-6 h-6" /></div>
@@ -409,37 +368,18 @@ const App: React.FC = () => {
                     <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-1">Views Generated</div>
                  </div>
               </div>
-
-              {/* CTA Buttons */}
               <div className="flex flex-wrap gap-5 pt-4">
-                <a 
-                  href="#work" 
-                  onClick={(e) => scrollToSection(e, 'work')} 
-                  className="px-10 py-5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl font-black text-sm text-white uppercase tracking-widest flex items-center gap-3 transition-all hover:scale-105 shadow-xl shadow-orange-600/10"
-                >
+                <a href="#work" onClick={(e) => scrollToSection(e, 'work')} className="px-10 py-5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl font-black text-sm text-white uppercase tracking-widest flex items-center gap-3 transition-all hover:scale-105 shadow-xl shadow-orange-600/10">
                   <Play className="w-4 h-4 fill-white" />
                   View My Work
                 </a>
-                <button 
-                  onClick={() => setShowOrderForm(true)}
-                  className="px-10 py-5 bg-white/5 border border-white/10 rounded-2xl font-black text-sm text-white uppercase tracking-widest flex items-center gap-3 transition-all hover:bg-white/10"
-                >
+                <button onClick={() => setShowOrderForm(true)} className="px-10 py-5 bg-white/5 border border-white/10 rounded-2xl font-black text-sm text-white uppercase tracking-widest flex items-center gap-3 transition-all hover:bg-white/10">
                   <Sparkles className="w-4 h-4 text-orange-500" />
                   Get a Quote
                 </button>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Stats - Legacy section */}
-      <section className="py-24 px-6 md:px-12 bg-slate-50 dark:bg-[#080808] border-y border-black/5 dark:border-white/5 transition-colors hidden md:block">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 items-center text-center">
-          <StatBox icon={<Youtube className="w-8 h-8 text-red-600" />} value="15M+" label="Views Created" />
-          <StatBox icon={<Award className="w-8 h-8 text-orange-500" />} value="700+" label="Designs Sold" />
-          <StatBox icon={<TrendingUp className="w-8 h-8 text-green-500" />} value="35%" label="Average CTR" />
-          <StatBox icon={<Users className="w-8 h-8 text-blue-500" />} value="250+" label="Global Clients" />
         </div>
       </section>
 
@@ -455,60 +395,40 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* ORDER MODAL & PAYMENT GATEWAY INTEGRATION */}
+      {/* ORDER MODAL */}
       {showOrderForm && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-10 animate-fade-in">
           <div className="absolute inset-0 bg-black/95 backdrop-blur-xl" onClick={closeModals} />
-          
           <div className="relative z-10 w-full max-w-4xl bg-white dark:bg-[#0a0a0a] rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden scale-in">
             {paymentStep !== 'processing' && (
               <button onClick={closeModals} className="absolute top-6 right-6 z-[120] w-10 h-10 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center hover:bg-orange-600 hover:text-white transition-all">
                 <X className="w-5 h-5" />
               </button>
             )}
-
             {paymentStep === 'checkout' && (
               <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
                 <div className="flex-1 p-8 md:p-12 space-y-8 overflow-y-auto custom-scrollbar-niche">
-                  <h3 className="text-3xl font-black tracking-tighter dark:text-white flex items-center gap-3">
-                    PROJECT BRIEF <Sparkles className="w-6 h-6 text-orange-500" />
-                  </h3>
-                  
+                  <h3 className="text-3xl font-black tracking-tighter dark:text-white flex items-center gap-3">PROJECT BRIEF <Sparkles className="w-6 h-6 text-orange-500" /></h3>
                   <div className="space-y-4">
                     <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Select Your Niche</p>
                     <div className="flex flex-wrap gap-2">
                       {niches.slice(0, 10).map(niche => (
-                        <button 
-                          key={niche} 
-                          onClick={() => handleNicheSelect(niche)}
-                          className={`px-4 py-2.5 rounded-xl text-[10px] font-bold border transition-all ${
-                            selectedNiche === niche 
-                              ? 'bg-orange-600 border-orange-600 text-white' 
-                              : 'bg-black/5 dark:bg-white/5 border-transparent dark:text-zinc-400 hover:border-orange-500/30'
-                          }`}
-                        >
-                          {niche}
-                        </button>
+                        <button key={niche} onClick={() => handleNicheSelect(niche)} className={`px-4 py-2.5 rounded-xl text-[10px] font-bold border transition-all ${selectedNiche === niche ? 'bg-orange-600 border-orange-600 text-white' : 'bg-black/5 dark:bg-white/5 border-transparent dark:text-zinc-400 hover:border-orange-500/30'}`}>{niche}</button>
                       ))}
                     </div>
                   </div>
-
                   <div className="space-y-4">
                     <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Reference Links</p>
                     <input type="text" placeholder="https://youtube.com/..." className="w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white border border-transparent focus:border-orange-600/30 transition-all" />
                   </div>
-
                   <div className="space-y-4">
                     <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Project Notes</p>
                     <textarea rows={4} placeholder="Anything else you want to share..." className="w-full bg-black/5 dark:bg-white/5 rounded-2xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white resize-none border border-transparent focus:border-orange-600/30 transition-all" />
                   </div>
-
                   <div className="pt-4 flex items-center gap-3 text-zinc-500 text-[10px] font-bold uppercase tracking-wider">
-                    <ShieldCheck className="w-4 h-4 text-green-500" />
-                    Encrypted Payment & Secured Checkout
+                    <ShieldCheck className="w-4 h-4 text-green-500" /> Encrypted Payment & Secured Checkout
                   </div>
                 </div>
-
                 <div className="md:w-[320px] bg-slate-50 dark:bg-zinc-950 p-8 md:p-12 border-l border-black/5 dark:border-white/5 flex flex-col justify-between">
                   <div>
                     <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-8">Investment Breakdown</h4>
@@ -519,21 +439,15 @@ const App: React.FC = () => {
                       </div>
                       <input type="range" min="1" max="15" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-orange-600" />
                     </div>
-                    
                     <div className="mt-12 space-y-2 text-center bg-black/5 dark:bg-white/5 p-6 rounded-2xl border border-white/5">
                       <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Total Investment</p>
                       <p className="text-5xl font-black tracking-tighter dark:text-white">₹{estimatedInvestment.toLocaleString()}</p>
                     </div>
                   </div>
-
                   <div className="space-y-4 mt-8">
-                    <button 
-                      onClick={handleConfirmOrder}
-                      className="group relative w-full py-6 bg-gradient-to-r from-orange-600 to-red-600 hover:scale-[1.02] text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-orange-600/20 active:scale-95 overflow-hidden"
-                    >
+                    <button onClick={handleConfirmOrder} className="group relative w-full py-6 bg-gradient-to-r from-orange-600 to-red-600 hover:scale-[1.02] text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-orange-600/20 active:scale-95 overflow-hidden">
                       <span className="relative z-10 flex items-center justify-center gap-3">
-                        <CreditCard className="w-4 h-4" />
-                        CONFIRM & PAY
+                        <CreditCard className="w-4 h-4" /> CONFIRM & PAY
                       </span>
                       <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                     </button>
@@ -542,8 +456,6 @@ const App: React.FC = () => {
                 </div>
               </div>
             )}
-
-            {/* PROCESSING OVERLAY */}
             {paymentStep === 'processing' && (
               <div className="p-20 flex flex-col items-center justify-center text-center space-y-8 animate-fade-in bg-zinc-950">
                 <div className="relative">
@@ -556,20 +468,8 @@ const App: React.FC = () => {
                   <h3 className="text-4xl font-black text-white tracking-tighter">PROCESSING PAYMENT</h3>
                   <p className="text-zinc-500 font-bold uppercase text-[10px] tracking-[0.4em]">Connecting to Secure Gateway...</p>
                 </div>
-                <div className="flex items-center gap-6 pt-8">
-                  <div className="flex flex-col items-center gap-2 opacity-50">
-                    <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center"><Lock className="w-4 h-4 text-white" /></div>
-                    <span className="text-[8px] font-bold text-white uppercase tracking-widest">Secure</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-2 opacity-50">
-                    <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center"><ShieldCheck className="w-4 h-4 text-white" /></div>
-                    <span className="text-[8px] font-bold text-white uppercase tracking-widest">Verified</span>
-                  </div>
-                </div>
               </div>
             )}
-
-            {/* SUCCESS OVERLAY */}
             {paymentStep === 'success' && (
               <div className="flex flex-col h-full md:flex-row bg-[#050505] animate-fade-in">
                 <div className="flex-1 p-12 md:p-20 flex flex-col items-center justify-center text-center">
@@ -577,46 +477,8 @@ const App: React.FC = () => {
                     <Check className="w-12 h-12 text-white stroke-[3]" />
                   </div>
                   <h3 className="text-5xl font-black text-white tracking-tighter mb-4">ORDER PLACED!</h3>
-                  <p className="text-lg text-zinc-400 font-medium max-w-sm mb-12">
-                    Payment successful. Ayush has been notified and will contact you via email within the next <span className="text-white font-bold">2 hours</span>.
-                  </p>
-                  <button 
-                    onClick={closeModals}
-                    className="px-12 py-5 bg-white text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl active:scale-95"
-                  >
-                    CONTINUE BROWSING
-                  </button>
-                </div>
-                <div className="md:w-[350px] bg-zinc-900/50 border-l border-white/5 p-12 flex flex-col">
-                   <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-8">Receipt Details</h4>
-                   <div className="space-y-6">
-                      <div className="flex justify-between">
-                         <span className="text-xs font-bold text-zinc-400">Order ID</span>
-                         <span className="text-xs font-black text-white uppercase tracking-widest">#GFX-{Math.floor(Math.random()*9000)+1000}</span>
-                      </div>
-                      <div className="flex justify-between">
-                         <span className="text-xs font-bold text-zinc-400">Status</span>
-                         <span className="text-xs font-black text-green-500 uppercase tracking-widest">Completed</span>
-                      </div>
-                      <div className="h-px bg-white/5 my-2" />
-                      <div className="flex justify-between">
-                         <span className="text-xs font-bold text-zinc-400">Pack Size</span>
-                         <span className="text-xs font-black text-white uppercase tracking-widest">{quantity} Thumbnails</span>
-                      </div>
-                      <div className="flex justify-between">
-                         <span className="text-xs font-bold text-zinc-400">Niche</span>
-                         <span className="text-xs font-black text-orange-500 uppercase tracking-widest">{selectedNiche || 'General'}</span>
-                      </div>
-                      <div className="h-px bg-white/5 my-2" />
-                      <div className="flex justify-between items-end">
-                         <span className="text-xs font-bold text-zinc-400">Total Paid</span>
-                         <span className="text-3xl font-black text-white">₹{estimatedInvestment.toLocaleString()}</span>
-                      </div>
-                   </div>
-                   <div className="mt-auto pt-12 flex flex-col items-center gap-2 opacity-30">
-                      <ShieldCheck className="w-8 h-8 text-white" />
-                      <span className="text-[8px] font-bold text-white uppercase tracking-[0.2em]">Transaction Verified</span>
-                   </div>
+                  <p className="text-lg text-zinc-400 font-medium max-w-sm mb-12">Payment successful. Ayush has been notified and will contact you via email within the next <span className="text-white font-bold">2 hours</span>.</p>
+                  <button onClick={closeModals} className="px-12 py-5 bg-white text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl active:scale-95">CONTINUE BROWSING</button>
                 </div>
               </div>
             )}
@@ -627,63 +489,68 @@ const App: React.FC = () => {
       <footer className="py-12 px-6 md:px-12 bg-slate-900 dark:bg-black border-t border-white/5">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl overflow-hidden border border-orange-600/30 p-0.5 bg-gradient-to-br from-orange-600 to-red-600">
-              <div className="w-full h-full rounded-[0.7rem] overflow-hidden bg-black">
-                <LogoImage />
-              </div>
+            <div className="w-14 h-14 rounded-2xl overflow-hidden shadow-xl bg-[#FF4D00]">
+              <LogoImage />
             </div>
             <div className="flex flex-col">
-              <span className="font-black text-lg text-white uppercase tracking-tighter leading-none">AYUSH <span className="text-orange-500 font-light tracking-widest">GFX</span></span>
+              <span className="font-black text-lg text-white uppercase tracking-tighter leading-none">AYUSH <span className="text-[#FF4D00]">GFX</span></span>
               <span className="text-[7px] font-bold tracking-[0.3em] text-zinc-500 uppercase mt-1">Global Branding Authority</span>
             </div>
           </div>
           <p className="text-xs text-gray-500 font-bold tracking-widest uppercase">© {new Date().getFullYear()} Ayush GFX.</p>
         </div>
       </footer>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .animate-slide-down { animation: slideDown 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.8s ease forwards; }
-        .custom-scrollbar-niche::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar-niche::-webkit-scrollbar-thumb { background: #ea580c; border-radius: 10px; }
-        @keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .scale-in { animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes bounce-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .animate-bounce-slow { animation: bounce-slow 4s infinite ease-in-out; }
-      `}} />
     </div>
   );
 };
 
-const StatBox: React.FC<{ icon: React.ReactNode, value: string, label: string }> = ({ icon, value, label }) => (
-  <div className="flex flex-col items-center group">
-    <div className="mb-4 p-4 bg-black/5 dark:bg-white/5 rounded-2xl group-hover:scale-110 transition-transform">
-      {icon}
-    </div>
-    <p className="text-3xl font-black dark:text-white">{value}</p>
-    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">{label}</p>
-  </div>
-);
+const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
-const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => (
-  <div className="group relative rounded-[2rem] overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5 shadow-2xl transition-all cursor-pointer">
-    <div className="absolute top-4 left-4 z-20">
-      <span className="px-3 py-1 bg-black/70 backdrop-blur-xl text-[9px] font-black text-white rounded-full uppercase tracking-widest">{item.category}</span>
+  return (
+    <div className="group relative rounded-[2rem] overflow-hidden bg-slate-100 dark:bg-zinc-900/50 border border-black/5 dark:border-white/5 shadow-2xl transition-all cursor-pointer">
+      <div className="absolute top-5 left-5 z-20">
+        <span className="px-5 py-1.5 bg-black/90 text-[9px] font-black text-white rounded-full uppercase tracking-[0.2em]">
+          {item.category}
+        </span>
+      </div>
+      
+      <div className="aspect-video relative overflow-hidden bg-zinc-800">
+        {!isLoaded && !hasError && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Loader2 className="w-8 h-8 text-orange-600 animate-spin opacity-50" />
+          </div>
+        )}
+        
+        {hasError ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+            <Youtube className="w-12 h-12 text-zinc-700 mb-2" />
+            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Image Unavailable</span>
+          </div>
+        ) : (
+          <img 
+            src={item.imageUrl} 
+            alt={item.title} 
+            className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            onLoad={() => setIsLoaded(true)}
+            onError={() => setHasError(true)}
+          />
+        )}
+        
+        {/* Cinematic Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+           <p className="text-orange-500 text-[10px] font-black uppercase tracking-[0.3em] mb-2 translate-y-4 group-hover:translate-y-0 transition-transform">Premium Visual</p>
+           <h3 className="text-xl font-black text-white leading-tight translate-y-4 group-hover:translate-y-0 transition-transform delay-75">{item.title}</h3>
+        </div>
+      </div>
     </div>
-    <div className="aspect-video overflow-hidden">
-      <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-    </div>
-    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
-      <h3 className="text-xl font-black text-white">{item.title}</h3>
-    </div>
-  </div>
-);
+  );
+};
 
 const ContactLink: React.FC<{ icon: React.ReactNode, label: string, value: string }> = ({ icon, label, value }) => (
   <div className="flex flex-col items-center gap-4 cursor-pointer group">
-    <div className="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-orange-600 transition-colors">
+    <div className="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-[#FF4D00] transition-colors">
       <div className="text-zinc-500 dark:text-zinc-400 group-hover:text-white transition-colors">{icon}</div>
     </div>
     <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{label}</p>
