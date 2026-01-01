@@ -8,7 +8,7 @@ export const THUMBNAILS: ThumbnailItem[] = [
     id: 'g7', 
     title: 'Minecraft Arctic Survival', 
     category: 'Gaming', 
-    imageUrl: 'https://i.ibb.co/ns2RGbP1/antarctica.jpg', 
+    imageUrl: 'https://iili.io/fhefxwX.jpg', 
     ctr: '18.4% CTR'
   },
   { 

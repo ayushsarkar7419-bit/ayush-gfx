@@ -36,7 +36,7 @@ import { SectionHeading } from './components/SectionHeading';
 /**
  * BRAND LOGO SOURCE - Using the high-quality portrait provided by the user
  */
-const USER_PHOTO = "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000&auto=format&fit=crop";
+const USER_PHOTO = "https://iili.io/fhex3MX.jpg";
 
 const LogoImage: React.FC<{ className?: string }> = ({ className = "w-full h-full object-cover" }) => {
   const [error, setError] = useState(false);
