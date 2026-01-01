@@ -291,7 +291,7 @@ const App: React.FC = () => {
       </section>
 
       {/* Work Grid */}
-      <section id="work" className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
+      <section id="work" className="py-24 px-6 md:px-12 w-full max-w-[95%] 2xl:max-w-[1800px] mx-auto">
         <SectionHeading title="Recent Projects" center />
         <div className="flex flex-wrap justify-center gap-3 mb-16">
           {CATEGORIES.map(category => (
@@ -532,44 +532,62 @@ const App: React.FC = () => {
 const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => {
   const [imgSrc, setImgSrc] = useState(item.imageUrl);
   const [isLoaded, setIsLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     setImgSrc(item.imageUrl);
     setIsLoaded(false);
   }, [item.imageUrl]);
 
+  // Check if image is already loaded from cache immediately
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete) {
+      if (imgRef.current.naturalWidth > 0) {
+         setIsLoaded(true);
+      }
+    }
+  }, []);
+
+  const handleImageLoad = () => {
+    setIsLoaded(true);
+  };
+
   const handleImageError = () => {
     // Fallback image - using a high quality abstract gaming background
     setImgSrc("https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop");
+    // Ensure loader is hidden even if fallback loads
+    // Note: fallback will trigger its own onLoad, but just in case
   };
 
   return (
     <div className="group relative rounded-[2rem] overflow-hidden bg-[#0a0a0a] dark:bg-[#0a0a0a] border border-white/5 shadow-2xl transition-all hover:scale-[1.02] cursor-pointer">
       <div className="aspect-video relative overflow-hidden bg-zinc-900 border-b border-white/5">
         {!isLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 z-10">
             <Loader2 className="w-8 h-8 text-orange-600 animate-spin opacity-50" />
           </div>
         )}
         
         <img 
+          ref={imgRef}
           src={imgSrc} 
           alt={item.title} 
+          loading="eager"
           className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-          onLoad={() => setIsLoaded(true)}
+          onLoad={handleImageLoad}
           onError={handleImageError}
         />
       </div>
 
-      <div className="p-6 space-y-3 bg-[#0a0a0a]">
-        <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF4D00]">
+      <div className="p-4 space-y-1.5 bg-[#0a0a0a]">
+        <div className="text-[9px] font-black uppercase tracking-[0.2em] text-[#FF4D00]">
           {item.category}
         </div>
-        <h3 className="text-lg font-black text-white leading-tight tracking-tight h-14 overflow-hidden line-clamp-2">
+        <h3 className="text-base font-black text-white leading-tight tracking-tight line-clamp-2 h-10">
           {item.title}
         </h3>
         {item.ctr && (
-          <div className="text-[11px] font-bold text-green-500 uppercase tracking-widest">
+          <div className="text-[10px] font-bold text-green-500 uppercase tracking-widest">
             {item.ctr}
           </div>
         )}
