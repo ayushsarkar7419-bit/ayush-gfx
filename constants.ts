@@ -4,15 +4,17 @@ import { ThumbnailItem, Skill, Feature, Category } from './types';
 export const CATEGORIES: Category[] = ['All', 'Gaming', 'Vlog', 'Documentary', 'Shorts', 'Tech'];
 
 export const THUMBNAILS: ThumbnailItem[] = [
-  { id: '1', title: 'Ultimate FPS Strategy', category: 'Gaming', imageUrl: 'https://picsum.photos/600/400?random=1' },
+  { id: 'g1', title: 'Minecraft: Frozen Survival', category: 'Gaming', imageUrl: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?q=80&w=1000&auto=format&fit=crop' },
+  { id: 'g2', title: 'The Every Color Wheel Challenge', category: 'Gaming', imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop' },
+  { id: 'g3', title: 'GTA V: Ultimate Supercar Race', category: 'Gaming', imageUrl: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1000&auto=format&fit=crop' },
+  { id: 'g4', title: 'Finding the 0.01% Rare Cube', category: 'Gaming', imageUrl: 'https://images.unsplash.com/photo-1605898399745-92762e549141?q=80&w=1000&auto=format&fit=crop' },
+  { id: 'g5', title: 'KAMLA: The Horror Legend', category: 'Gaming', imageUrl: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?q=80&w=1000&auto=format&fit=crop' },
+  { id: 'g6', title: 'Minecraft McDonald\'s Tycoon', category: 'Gaming', imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1000&auto=format&fit=crop' },
+  { id: 'g7', title: 'A Minecraft Movie: Real Review', category: 'Gaming', imageUrl: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1000&auto=format&fit=crop' },
+  { id: 'g8', title: 'Minecraft: Polar Bear Arctic Survival', category: 'Gaming', imageUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000&auto=format&fit=crop' },
   { id: '2', title: 'Day in Tokyo', category: 'Vlog', imageUrl: 'https://picsum.photos/600/400?random=2' },
   { id: '3', title: 'The Rise of AI', category: 'Documentary', imageUrl: 'https://picsum.photos/600/400?random=3' },
-  { id: '4', title: 'Why I Left...', category: 'Shorts', imageUrl: 'https://picsum.photos/600/400?random=4' },
   { id: '5', title: 'New M3 Pro Setup', category: 'Tech', imageUrl: 'https://picsum.photos/600/400?random=5' },
-  { id: '6', title: '100 Days in Hardcore', category: 'Gaming', imageUrl: 'https://picsum.photos/600/400?random=6' },
-  { id: '7', title: 'Van Life Realities', category: 'Vlog', imageUrl: 'https://picsum.photos/600/400?random=7' },
-  { id: '8', title: 'The Crypto Crash', category: 'Documentary', imageUrl: 'https://picsum.photos/600/400?random=8' },
-  { id: '9', title: 'Tech Unboxing!', category: 'Tech', imageUrl: 'https://picsum.photos/600/400?random=9' },
 ];
 
 export const SKILLS: Skill[] = [

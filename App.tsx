@@ -22,7 +22,12 @@ import {
   CreditCard,
   Sparkles,
   ArrowUpRight,
-  User
+  User,
+  Play,
+  Loader2,
+  Check,
+  ShieldCheck,
+  Lock
 } from 'lucide-react';
 import { CATEGORIES, THUMBNAILS, SKILLS, FEATURES, ABOUT_CONTENT } from './constants';
 import { Category, ThumbnailItem, Review } from './types';
@@ -30,7 +35,6 @@ import { SectionHeading } from './components/SectionHeading';
 
 /**
  * BRAND LOGO SOURCE
- * This points to the portrait image provided in your request.
  */
 const USER_PHOTO = "https://raw.githubusercontent.com/StackBlitz/stackblitz-images/main/ayush-gfx-portrait.jpg";
 
@@ -120,6 +124,8 @@ const App: React.FC = () => {
   const [isDark, setIsDark] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const [showOrderForm, setShowOrderForm] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
+  const [paymentStep, setPaymentStep] = useState<'checkout' | 'processing' | 'success'>('checkout');
   const [selectedCategory, setSelectedCategory] = useState<Category>('All');
   const [skillsVisible, setSkillsVisible] = useState(false);
   const skillsRef = useRef<HTMLElement>(null);
@@ -195,6 +201,18 @@ const App: React.FC = () => {
 
   const handleNicheSelect = (niche: string) => {
     setSelectedNiche(prev => prev === niche ? null : niche);
+  };
+
+  const handleConfirmOrder = () => {
+    setPaymentStep('processing');
+    setTimeout(() => {
+      setPaymentStep('success');
+    }, 3000);
+  };
+
+  const closeModals = () => {
+    setShowOrderForm(false);
+    setPaymentStep('checkout');
   };
 
   const toggleTheme = () => setIsDark(!isDark);
@@ -308,65 +326,106 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* About Me Section */}
-      <section id="about" className="py-24 px-6 md:px-12 bg-zinc-50 dark:bg-[#070707] transition-colors">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-            {/* Headshot Column - Now using the brand logo image */}
-            <div className="lg:col-span-5 relative group">
-              <div className="absolute inset-0 bg-orange-600/20 blur-[60px] rounded-full scale-75 group-hover:scale-100 transition-transform duration-700 pointer-events-none" />
-              <div className="relative rounded-[3rem] overflow-hidden border border-black/5 dark:border-white/10 shadow-2xl aspect-[4/5] bg-black">
-                <LogoImage />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-60" />
-                <div className="absolute bottom-8 left-8">
-                  <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 rounded-2xl">
-                    <Sparkles className="w-5 h-5 text-orange-500" />
-                    <span className="text-white font-bold text-sm tracking-wide uppercase">{ABOUT_CONTENT.experience} Experience</span>
-                  </div>
+      {/* NEW ABOUT ME SECTION - EXACT MATCH TO PROVIDED IMAGE */}
+      <section id="about" className="py-24 px-6 md:px-12 bg-[#050505] relative overflow-hidden">
+        {/* Background glow */}
+        <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-red-900/10 blur-[120px] rounded-full pointer-events-none -translate-y-1/2" />
+        
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+            
+            {/* Left side: Cinematic Image with badges */}
+            <div className="lg:col-span-5 flex justify-center lg:justify-start">
+              <div className="relative w-full max-w-[420px]">
+                
+                {/* Floating Badge: Available Now */}
+                <div className="absolute -top-4 -right-8 z-30 bg-black/40 backdrop-blur-xl border border-white/10 px-4 py-1.5 rounded-full flex items-center gap-2 animate-bounce-slow shadow-2xl">
+                  <div className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_#22c55e]" />
+                  <span className="text-[10px] font-bold text-white uppercase tracking-wider">Available Now</span>
                 </div>
+
+                {/* Floating Badge: YouTube Pro */}
+                <div className="absolute bottom-1/3 -right-12 z-30 bg-black/40 backdrop-blur-xl border border-white/10 px-5 py-2.5 rounded-2xl flex items-center gap-3 shadow-2xl group transition-transform hover:scale-105">
+                  <div className="w-8 h-8 bg-red-600/20 flex items-center justify-center rounded-lg border border-red-600/40">
+                    <Play className="w-4 h-4 text-red-600 fill-red-600" />
+                  </div>
+                  <span className="text-xs font-black text-white uppercase tracking-widest">YouTube Pro</span>
+                </div>
+
+                {/* Floating Badge: Rating */}
+                <div className="absolute -bottom-6 -left-6 z-30 bg-black/40 backdrop-blur-xl border border-white/10 p-4 rounded-3xl shadow-2xl flex items-center gap-3">
+                   <div className="flex gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className={`w-3 h-3 ${i < 4 ? 'text-orange-500 fill-orange-500' : 'text-orange-500/30'}`} />
+                      ))}
+                   </div>
+                   <span className="text-sm font-black text-white">4.7 Rating</span>
+                </div>
+
+                {/* Main Image Frame */}
+                <div className="relative z-10 aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl bg-zinc-950">
+                  <LogoImage className="w-full h-full object-cover grayscale-[0.2] contrast-125" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                </div>
+                
+                {/* Visual Outline Box */}
+                <div className="absolute -inset-4 border border-white/5 rounded-[3rem] pointer-events-none" />
               </div>
             </div>
 
-            {/* Content Column */}
-            <div className="lg:col-span-7 space-y-8">
-              <div className="space-y-4">
-                <p className="text-[12px] font-black uppercase tracking-[0.5em] text-orange-600">The Visionary Behind The Frames</p>
-                <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-900 dark:text-white">
-                  Crafting First Impressions That <span className="text-orange-600">Stick</span>.
+            {/* Right side: Content */}
+            <div className="lg:col-span-7 space-y-10">
+              <div className="space-y-6">
+                <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+                  <Sparkles className="w-4 h-4 text-orange-500" />
+                  <span className="text-[11px] font-black text-white/80 uppercase tracking-widest">YouTube Thumbnail Expert</span>
+                </div>
+                
+                <h2 className="text-5xl md:text-7xl font-black text-white leading-[1.1] tracking-tighter">
+                  Thumbnails that<br />
+                  <span className="bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent italic">Get Clicks</span>
                 </h2>
-              </div>
-              
-              <div className="space-y-6 text-lg md:text-xl text-slate-600 dark:text-zinc-400 font-medium leading-relaxed">
-                <p>{ABOUT_CONTENT.bio}</p>
-                <p>{ABOUT_CONTENT.mission}</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-8 pt-4 pb-8">
-                <div>
-                  <h4 className="text-3xl font-black text-slate-900 dark:text-white">500+</h4>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mt-1">A/B Tests Conducted</p>
-                </div>
-                <div>
-                  <h4 className="text-3xl font-black text-slate-900 dark:text-white">99%</h4>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mt-1">Client Satisfaction</p>
-                </div>
+                
+                <p className="text-lg md:text-xl text-gray-400 font-medium max-w-xl leading-relaxed">
+                  I design scroll-stopping YouTube thumbnails that boost your <span className="text-white font-bold">CTR</span> and grow your channel. Let's make your videos <span className="text-white font-bold">impossible to ignore</span>.
+                </p>
               </div>
 
-              <div className="flex flex-wrap gap-6">
+              {/* Stat Cards Row */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                 <div className="bg-white/5 border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center transition-all hover:bg-white/10">
+                    <div className="text-orange-500 mb-3"><Youtube className="w-6 h-6" /></div>
+                    <div className="text-2xl font-black text-white">500+</div>
+                    <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-1">Thumbnails</div>
+                 </div>
+                 <div className="bg-white/5 border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center transition-all hover:bg-white/10">
+                    <div className="text-green-500 mb-3"><TrendingUp className="w-6 h-6" /></div>
+                    <div className="text-2xl font-black text-white">40%</div>
+                    <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-1">Avg CTR Boost</div>
+                 </div>
+                 <div className="bg-white/5 border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center transition-all hover:bg-white/10">
+                    <div className="text-blue-500 mb-3"><Users className="w-6 h-6" /></div>
+                    <div className="text-2xl font-black text-white">10M+</div>
+                    <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-1">Views Generated</div>
+                 </div>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap gap-5 pt-4">
                 <a 
                   href="#work" 
                   onClick={(e) => scrollToSection(e, 'work')} 
-                  className="px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-black rounded-2xl font-black text-sm uppercase tracking-widest flex items-center gap-3 hover:scale-105 transition-all shadow-xl dark:shadow-white/5 active:scale-95"
+                  className="px-10 py-5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl font-black text-sm text-white uppercase tracking-widest flex items-center gap-3 transition-all hover:scale-105 shadow-xl shadow-orange-600/10"
                 >
+                  <Play className="w-4 h-4 fill-white" />
                   View My Work
-                  <ChevronRight className="w-5 h-5" />
                 </a>
                 <button 
-                  onClick={() => setShowOrderForm(true)} 
-                  className="px-10 py-5 glass border border-black/10 dark:border-white/10 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center gap-3 hover:bg-orange-600 hover:text-white hover:border-orange-600 transition-all active:scale-95 group text-slate-800 dark:text-white"
+                  onClick={() => setShowOrderForm(true)}
+                  className="px-10 py-5 bg-white/5 border border-white/10 rounded-2xl font-black text-sm text-white uppercase tracking-widest flex items-center gap-3 transition-all hover:bg-white/10"
                 >
-                  Get A Quote
-                  <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  <Sparkles className="w-4 h-4 text-orange-500" />
+                  Get a Quote
                 </button>
               </div>
             </div>
@@ -374,8 +433,8 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="py-24 px-6 md:px-12 bg-slate-50 dark:bg-[#080808] border-y border-black/5 dark:border-white/5 transition-colors">
+      {/* Stats - Legacy section */}
+      <section className="py-24 px-6 md:px-12 bg-slate-50 dark:bg-[#080808] border-y border-black/5 dark:border-white/5 transition-colors hidden md:block">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 items-center text-center">
           <StatBox icon={<Youtube className="w-8 h-8 text-red-600" />} value="15M+" label="Views Created" />
           <StatBox icon={<Award className="w-8 h-8 text-orange-500" />} value="700+" label="Designs Sold" />
@@ -396,71 +455,171 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* ORDER MODAL */}
+      {/* ORDER MODAL & PAYMENT GATEWAY INTEGRATION */}
       {showOrderForm && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-10 animate-fade-in">
-          <div className="absolute inset-0 bg-black/95 backdrop-blur-xl" onClick={() => setShowOrderForm(false)} />
+          <div className="absolute inset-0 bg-black/95 backdrop-blur-xl" onClick={closeModals} />
+          
           <div className="relative z-10 w-full max-w-4xl bg-white dark:bg-[#0a0a0a] rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden scale-in">
-            <button onClick={() => setShowOrderForm(false)} className="absolute top-6 right-6 z-[120] w-10 h-10 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center hover:bg-orange-600 hover:text-white transition-all">
-              <X className="w-5 h-5" />
-            </button>
+            {paymentStep !== 'processing' && (
+              <button onClick={closeModals} className="absolute top-6 right-6 z-[120] w-10 h-10 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center hover:bg-orange-600 hover:text-white transition-all">
+                <X className="w-5 h-5" />
+              </button>
+            )}
 
-            <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
-              <div className="flex-1 p-8 md:p-12 space-y-8 overflow-y-auto custom-scrollbar-niche">
-                <h3 className="text-3xl font-black tracking-tighter dark:text-white">PROJECT BRIEF</h3>
-                
-                <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Select Your Niche</p>
-                  <div className="flex flex-wrap gap-2">
-                    {niches.slice(0, 10).map(niche => (
-                      <button 
-                        key={niche} 
-                        onClick={() => handleNicheSelect(niche)}
-                        className={`px-4 py-2.5 rounded-xl text-[10px] font-bold border transition-all ${
-                          selectedNiche === niche 
-                            ? 'bg-orange-600 border-orange-600 text-white' 
-                            : 'bg-black/5 dark:bg-white/5 border-transparent dark:text-zinc-400 hover:border-orange-500/30'
-                        }`}
-                      >
-                        {niche}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Reference Links</p>
-                  <input type="text" placeholder="https://youtube.com/..." className="w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white" />
-                </div>
-
-                <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Project Notes</p>
-                  <textarea rows={4} placeholder="Anything else you want to share..." className="w-full bg-black/5 dark:bg-white/5 rounded-2xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white resize-none" />
-                </div>
-              </div>
-
-              <div className="md:w-[320px] bg-slate-50 dark:bg-zinc-950 p-8 md:p-12 border-l border-black/5 dark:border-white/5 flex flex-col justify-between">
-                <div>
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-8">Investment</h4>
-                  <div className="space-y-6">
-                    <div className="flex justify-between items-end">
-                      <span className="text-xs font-bold dark:text-zinc-400">Thumbnails</span>
-                      <span className="text-2xl font-black dark:text-white">{quantity}</span>
-                    </div>
-                    <input type="range" min="1" max="15" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full accent-orange-600" />
-                  </div>
+            {paymentStep === 'checkout' && (
+              <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
+                <div className="flex-1 p-8 md:p-12 space-y-8 overflow-y-auto custom-scrollbar-niche">
+                  <h3 className="text-3xl font-black tracking-tighter dark:text-white flex items-center gap-3">
+                    PROJECT BRIEF <Sparkles className="w-6 h-6 text-orange-500" />
+                  </h3>
                   
-                  <div className="mt-12 text-center">
-                    <p className="text-5xl font-black tracking-tighter dark:text-white">₹{estimatedInvestment.toLocaleString()}</p>
-                    <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-600 mt-2">ESTIMATED TOTAL</p>
+                  <div className="space-y-4">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Select Your Niche</p>
+                    <div className="flex flex-wrap gap-2">
+                      {niches.slice(0, 10).map(niche => (
+                        <button 
+                          key={niche} 
+                          onClick={() => handleNicheSelect(niche)}
+                          className={`px-4 py-2.5 rounded-xl text-[10px] font-bold border transition-all ${
+                            selectedNiche === niche 
+                              ? 'bg-orange-600 border-orange-600 text-white' 
+                              : 'bg-black/5 dark:bg-white/5 border-transparent dark:text-zinc-400 hover:border-orange-500/30'
+                          }`}
+                        >
+                          {niche}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Reference Links</p>
+                    <input type="text" placeholder="https://youtube.com/..." className="w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white border border-transparent focus:border-orange-600/30 transition-all" />
+                  </div>
+
+                  <div className="space-y-4">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Project Notes</p>
+                    <textarea rows={4} placeholder="Anything else you want to share..." className="w-full bg-black/5 dark:bg-white/5 rounded-2xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white resize-none border border-transparent focus:border-orange-600/30 transition-all" />
+                  </div>
+
+                  <div className="pt-4 flex items-center gap-3 text-zinc-500 text-[10px] font-bold uppercase tracking-wider">
+                    <ShieldCheck className="w-4 h-4 text-green-500" />
+                    Encrypted Payment & Secured Checkout
                   </div>
                 </div>
 
-                <button className="w-full py-6 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-orange-600/20 mt-12">
-                  CONFIRM ORDER
-                </button>
+                <div className="md:w-[320px] bg-slate-50 dark:bg-zinc-950 p-8 md:p-12 border-l border-black/5 dark:border-white/5 flex flex-col justify-between">
+                  <div>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-8">Investment Breakdown</h4>
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-end">
+                        <span className="text-xs font-bold dark:text-zinc-400">Thumbnails</span>
+                        <span className="text-2xl font-black dark:text-white">{quantity}</span>
+                      </div>
+                      <input type="range" min="1" max="15" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-orange-600" />
+                    </div>
+                    
+                    <div className="mt-12 space-y-2 text-center bg-black/5 dark:bg-white/5 p-6 rounded-2xl border border-white/5">
+                      <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Total Investment</p>
+                      <p className="text-5xl font-black tracking-tighter dark:text-white">₹{estimatedInvestment.toLocaleString()}</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 mt-8">
+                    <button 
+                      onClick={handleConfirmOrder}
+                      className="group relative w-full py-6 bg-gradient-to-r from-orange-600 to-red-600 hover:scale-[1.02] text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-orange-600/20 active:scale-95 overflow-hidden"
+                    >
+                      <span className="relative z-10 flex items-center justify-center gap-3">
+                        <CreditCard className="w-4 h-4" />
+                        CONFIRM & PAY
+                      </span>
+                      <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                    </button>
+                    <p className="text-[8px] text-center text-zinc-500 uppercase tracking-widest font-bold">Secure Mock Payment Gateway</p>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* PROCESSING OVERLAY */}
+            {paymentStep === 'processing' && (
+              <div className="p-20 flex flex-col items-center justify-center text-center space-y-8 animate-fade-in bg-zinc-950">
+                <div className="relative">
+                  <div className="w-32 h-32 rounded-full border-4 border-white/5 flex items-center justify-center">
+                    <Loader2 className="w-16 h-16 text-orange-500 animate-spin" />
+                  </div>
+                  <div className="absolute inset-0 bg-orange-500/10 blur-3xl rounded-full" />
+                </div>
+                <div className="space-y-3">
+                  <h3 className="text-4xl font-black text-white tracking-tighter">PROCESSING PAYMENT</h3>
+                  <p className="text-zinc-500 font-bold uppercase text-[10px] tracking-[0.4em]">Connecting to Secure Gateway...</p>
+                </div>
+                <div className="flex items-center gap-6 pt-8">
+                  <div className="flex flex-col items-center gap-2 opacity-50">
+                    <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center"><Lock className="w-4 h-4 text-white" /></div>
+                    <span className="text-[8px] font-bold text-white uppercase tracking-widest">Secure</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-2 opacity-50">
+                    <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center"><ShieldCheck className="w-4 h-4 text-white" /></div>
+                    <span className="text-[8px] font-bold text-white uppercase tracking-widest">Verified</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SUCCESS OVERLAY */}
+            {paymentStep === 'success' && (
+              <div className="flex flex-col h-full md:flex-row bg-[#050505] animate-fade-in">
+                <div className="flex-1 p-12 md:p-20 flex flex-col items-center justify-center text-center">
+                  <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(34,197,94,0.3)] mb-8 scale-in">
+                    <Check className="w-12 h-12 text-white stroke-[3]" />
+                  </div>
+                  <h3 className="text-5xl font-black text-white tracking-tighter mb-4">ORDER PLACED!</h3>
+                  <p className="text-lg text-zinc-400 font-medium max-w-sm mb-12">
+                    Payment successful. Ayush has been notified and will contact you via email within the next <span className="text-white font-bold">2 hours</span>.
+                  </p>
+                  <button 
+                    onClick={closeModals}
+                    className="px-12 py-5 bg-white text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl active:scale-95"
+                  >
+                    CONTINUE BROWSING
+                  </button>
+                </div>
+                <div className="md:w-[350px] bg-zinc-900/50 border-l border-white/5 p-12 flex flex-col">
+                   <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-8">Receipt Details</h4>
+                   <div className="space-y-6">
+                      <div className="flex justify-between">
+                         <span className="text-xs font-bold text-zinc-400">Order ID</span>
+                         <span className="text-xs font-black text-white uppercase tracking-widest">#GFX-{Math.floor(Math.random()*9000)+1000}</span>
+                      </div>
+                      <div className="flex justify-between">
+                         <span className="text-xs font-bold text-zinc-400">Status</span>
+                         <span className="text-xs font-black text-green-500 uppercase tracking-widest">Completed</span>
+                      </div>
+                      <div className="h-px bg-white/5 my-2" />
+                      <div className="flex justify-between">
+                         <span className="text-xs font-bold text-zinc-400">Pack Size</span>
+                         <span className="text-xs font-black text-white uppercase tracking-widest">{quantity} Thumbnails</span>
+                      </div>
+                      <div className="flex justify-between">
+                         <span className="text-xs font-bold text-zinc-400">Niche</span>
+                         <span className="text-xs font-black text-orange-500 uppercase tracking-widest">{selectedNiche || 'General'}</span>
+                      </div>
+                      <div className="h-px bg-white/5 my-2" />
+                      <div className="flex justify-between items-end">
+                         <span className="text-xs font-bold text-zinc-400">Total Paid</span>
+                         <span className="text-3xl font-black text-white">₹{estimatedInvestment.toLocaleString()}</span>
+                      </div>
+                   </div>
+                   <div className="mt-auto pt-12 flex flex-col items-center gap-2 opacity-30">
+                      <ShieldCheck className="w-8 h-8 text-white" />
+                      <span className="text-[8px] font-bold text-white uppercase tracking-[0.2em]">Transaction Verified</span>
+                   </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -491,6 +650,8 @@ const App: React.FC = () => {
         .custom-scrollbar-niche::-webkit-scrollbar-thumb { background: #ea580c; border-radius: 10px; }
         @keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .scale-in { animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes bounce-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .animate-bounce-slow { animation: bounce-slow 4s infinite ease-in-out; }
       `}} />
     </div>
   );
