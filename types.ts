@@ -6,6 +6,7 @@ export interface ThumbnailItem {
   title: string;
   category: Category;
   imageUrl: string;
+  ctr?: string;
 }
 
 export interface Review {

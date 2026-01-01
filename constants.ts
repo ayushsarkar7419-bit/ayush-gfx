@@ -5,58 +5,53 @@ export const CATEGORIES: Category[] = ['All', 'Gaming', 'Vlog', 'Documentary', '
 
 export const THUMBNAILS: ThumbnailItem[] = [
   { 
-    id: 'g1', 
-    title: '100 Days in Minecraft Arctic', 
+    id: 'g7', 
+    title: 'Minecraft Arctic Survival', 
     category: 'Gaming', 
-    imageUrl: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?q=80&w=1000&auto=format&fit=crop' 
+    imageUrl: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?q=80&w=1000&auto=format&fit=crop', // Representing the Arctic Minecraft theme
+    ctr: '18.4% CTR'
+  },
+  { 
+    id: 'g1', 
+    title: 'Gaming Live Stream', 
+    category: 'Gaming', 
+    imageUrl: 'https://images.unsplash.com/photo-1605898930776-766ca8a29952?q=80&w=1000&auto=format&fit=crop',
+    ctr: '12.8% CTR'
   },
   { 
     id: 'g2', 
-    title: 'The Every Color Wheel Challenge', 
+    title: 'Champion Valorant', 
     category: 'Gaming', 
-    imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop' 
+    imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop',
+    ctr: '15.2% CTR'
   },
   { 
     id: 'g3', 
-    title: 'Ultimate Supercar Race', 
-    category: 'Gaming', 
-    imageUrl: 'https://images.unsplash.com/photo-1525609004556-c46c7d6cf0a3?q=80&w=1000&auto=format&fit=crop' 
+    title: 'Gaming PC Setup', 
+    category: 'Tech', 
+    imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1000&auto=format&fit=crop',
+    ctr: '11.5% CTR'
   },
   { 
     id: 'g4', 
-    title: 'Coding the Impossible Game', 
-    category: 'Gaming', 
-    imageUrl: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=1000&auto=format&fit=crop' 
+    title: 'The Arctic Challenge', 
+    category: 'Documentary', 
+    imageUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000&auto=format&fit=crop',
+    ctr: '14.1% CTR'
   },
   { 
     id: 'g5', 
-    title: 'KAMLA: The Horror Legend', 
-    category: 'Gaming', 
-    imageUrl: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?q=80&w=1000&auto=format&fit=crop' 
+    title: 'Neon Tokyo Vlog', 
+    category: 'Vlog', 
+    imageUrl: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=1000&auto=format&fit=crop',
+    ctr: '13.5% CTR'
   },
   { 
     id: 'g6', 
-    title: 'Pro Music Production Setup', 
+    title: 'Survival Horror Legend', 
     category: 'Gaming', 
-    imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1000&auto=format&fit=crop' 
-  },
-  { 
-    id: 'g7', 
-    title: 'Central Cinema Neon Street', 
-    category: 'Vlog', 
-    imageUrl: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=1000&auto=format&fit=crop' 
-  },
-  { 
-    id: 'g8', 
-    title: 'Mountain Range Expedition', 
-    category: 'Documentary', 
-    imageUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000&auto=format&fit=crop' 
-  },
-  { 
-    id: 'g9', 
-    title: 'Arctic Penguin Life', 
-    category: 'Documentary', 
-    imageUrl: 'https://images.unsplash.com/photo-1517783999520-f068d7431a60?q=80&w=1000&auto=format&fit=crop' 
+    imageUrl: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?q=80&w=1000&auto=format&fit=crop',
+    ctr: '16.8% CTR'
   },
 ];
 

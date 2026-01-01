@@ -34,23 +34,32 @@ import { Category, ThumbnailItem, Review } from './types';
 import { SectionHeading } from './components/SectionHeading';
 
 /**
- * BRAND LOGO SOURCE - Updated with new profile photo
+ * BRAND LOGO SOURCE - Using the high-quality portrait provided by the user
  */
-const USER_PHOTO = "https://raw.githubusercontent.com/StackBlitz/stackblitz-images/main/ayush-gfx-portrait-new.jpg";
+const USER_PHOTO = "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000&auto=format&fit=crop";
 
 const LogoImage: React.FC<{ className?: string }> = ({ className = "w-full h-full object-cover" }) => {
   const [error, setError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   
   return (
-    <div className="w-full h-full relative bg-[#FF4D00] flex items-center justify-center">
+    <div className="w-full h-full relative bg-[#FF4D00] flex items-center justify-center overflow-hidden">
       {!error ? (
-        <img 
-          src={USER_PHOTO} 
-          alt="Ayush GFX Logo" 
-          className={className}
-          onError={() => setError(true)}
-          loading="eager"
-        />
+        <>
+          {!loaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-zinc-900">
+              <Loader2 className="w-5 h-5 animate-spin text-white/20" />
+            </div>
+          )}
+          <img 
+            src={USER_PHOTO} 
+            alt="Ayush GFX Logo" 
+            className={`${className} ${loaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-700`}
+            onLoad={() => setLoaded(true)}
+            onError={() => setError(true)}
+            loading="eager"
+          />
+        </>
       ) : (
         <div className="w-full h-full flex items-center justify-center">
           <User className="text-white w-1/2 h-1/2" />
@@ -79,8 +88,8 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
 
       <div className="relative z-10 flex flex-col items-center w-full max-w-xs text-center">
         <div className="relative mb-12">
-          <div className="w-32 h-32 rounded-[2rem] overflow-hidden border-2 border-orange-500 shadow-[0_0_50px_rgba(234,88,12,0.5)] animate-logo-draw p-1.5 bg-gradient-to-br from-orange-600 to-red-600">
-             <div className="w-full h-full rounded-[1.6rem] overflow-hidden bg-black">
+          <div className="w-32 h-32 rounded-[2.5rem] overflow-hidden border-2 border-orange-500 shadow-[0_0_50px_rgba(234,88,12,0.5)] animate-logo-draw p-1.5 bg-gradient-to-br from-orange-600 to-red-600">
+             <div className="w-full h-full rounded-[2.2rem] overflow-hidden bg-black">
                 <LogoImage />
              </div>
           </div>
@@ -126,7 +135,6 @@ const App: React.FC = () => {
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [paymentStep, setPaymentStep] = useState<'checkout' | 'processing' | 'success'>('checkout');
   const [selectedCategory, setSelectedCategory] = useState<Category>('All');
-  const skillsRef = useRef<HTMLElement>(null);
 
   // Order Form State
   const [quantity, setQuantity] = useState(1);
@@ -212,14 +220,16 @@ const App: React.FC = () => {
           : 'bg-transparent py-5 border-transparent'
       }`}>
         <div className="flex items-center gap-3 group animate-fade-in cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <div className="w-11 h-11 rounded-xl overflow-hidden shadow-xl transition-all group-hover:scale-105 group-hover:shadow-orange-600/20 bg-[#FF4D00]">
-            <LogoImage />
+          <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-xl transition-all group-hover:scale-105 group-hover:shadow-orange-600/30 p-0.5 bg-gradient-to-br from-orange-500 to-red-600">
+            <div className="w-full h-full rounded-[0.9rem] overflow-hidden bg-black">
+              <LogoImage />
+            </div>
           </div>
           <div className="flex flex-col">
-            <span className="font-black text-[1.15rem] tracking-tight uppercase text-slate-900 dark:text-white leading-none">
+            <span className="font-black text-[1.25rem] tracking-tight uppercase text-slate-900 dark:text-white leading-none">
               AYUSH <span className="text-[#FF4D00] ml-0.5">GFX</span>
             </span>
-            <span className="text-[8px] font-black tracking-[0.25em] text-zinc-500 uppercase mt-1">Premium Visuals</span>
+            <span className="text-[7px] font-black tracking-[0.35em] text-zinc-500 uppercase mt-1">Premium Visuals</span>
           </div>
         </div>
         
@@ -310,72 +320,85 @@ const App: React.FC = () => {
         <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-red-900/10 blur-[120px] rounded-full pointer-events-none -translate-y-1/2" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+            {/* Portrait Column */}
             <div className="lg:col-span-5 flex justify-center lg:justify-start">
-              <div className="relative w-full max-w-[420px]">
-                <div className="absolute -top-4 -right-8 z-30 bg-black/40 backdrop-blur-xl border border-white/10 px-4 py-1.5 rounded-full flex items-center gap-2 animate-bounce-slow shadow-2xl">
-                  <div className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_#22c55e]" />
-                  <span className="text-[10px] font-bold text-white uppercase tracking-wider">Available Now</span>
+              <div className="relative w-full max-w-[460px]">
+                {/* Available Now Status Badge */}
+                <div className="absolute -top-4 -right-2 z-30 bg-black/60 backdrop-blur-xl border border-white/10 px-4 py-1.5 rounded-full flex items-center gap-2 shadow-2xl">
+                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full shadow-[0_0_8px_#22c55e]" />
+                  <span className="text-[10px] font-black text-white uppercase tracking-widest">AVAILABLE NOW</span>
                 </div>
-                <div className="absolute bottom-1/3 -right-12 z-30 bg-black/40 backdrop-blur-xl border border-white/10 px-5 py-2.5 rounded-2xl flex items-center gap-3 shadow-2xl group transition-transform hover:scale-105">
-                  <div className="w-8 h-8 bg-red-600/20 flex items-center justify-center rounded-lg border border-red-600/40">
-                    <Play className="w-4 h-4 text-red-600 fill-red-600" />
+                
+                {/* Main Branding Container */}
+                <div className="relative z-10 aspect-[1/1] rounded-[4rem] overflow-hidden border-2 border-orange-500/20 shadow-[0_0_80px_rgba(255,77,0,0.15)] bg-zinc-950 group">
+                  <LogoImage className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                  
+                  {/* YouTube Pro Badge overlay */}
+                  <div className="absolute bottom-10 right-8 z-30 bg-black/80 backdrop-blur-xl border border-white/10 px-5 py-2.5 rounded-2xl flex items-center gap-3 shadow-2xl transition-transform hover:scale-105">
+                    <div className="w-8 h-8 bg-red-600/20 flex items-center justify-center rounded-lg border border-red-600/40">
+                      <Play className="w-4 h-4 text-red-600 fill-red-600" />
+                    </div>
+                    <span className="text-xs font-black text-white uppercase tracking-widest">YOUTUBE PRO</span>
                   </div>
-                  <span className="text-xs font-black text-white uppercase tracking-widest">YouTube Pro</span>
                 </div>
-                <div className="absolute -bottom-6 -left-6 z-30 bg-black/40 backdrop-blur-xl border border-white/10 p-4 rounded-3xl shadow-2xl flex items-center gap-3">
+
+                {/* Rating Badge */}
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-30 bg-black/60 backdrop-blur-xl border border-white/10 px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 min-w-[200px] justify-center">
                    <div className="flex gap-1">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`w-3 h-3 ${i < 4 ? 'text-orange-500 fill-orange-500' : 'text-orange-500/30'}`} />
+                        <Star key={i} className="w-3.5 h-3.5 text-orange-500 fill-orange-500" />
                       ))}
                    </div>
-                   <span className="text-sm font-black text-white">4.7 Rating</span>
+                   <span className="text-xs font-black text-white uppercase tracking-widest">4.7 Rating</span>
                 </div>
-                <div className="relative z-10 aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl bg-zinc-950">
-                  <LogoImage className="w-full h-full object-cover grayscale-[0.2] contrast-125" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                </div>
-                <div className="absolute -inset-4 border border-white/5 rounded-[3rem] pointer-events-none" />
+                
+                <div className="absolute -inset-10 bg-orange-600/5 blur-[100px] rounded-full pointer-events-none" />
               </div>
             </div>
-            <div className="lg:col-span-7 space-y-10">
+
+            {/* Content Column */}
+            <div className="lg:col-span-7 space-y-10 lg:pl-6">
               <div className="space-y-6">
-                <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+                <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2.5 rounded-full">
                   <Sparkles className="w-4 h-4 text-orange-500" />
-                  <span className="text-[11px] font-black text-white/80 uppercase tracking-widest">YouTube Thumbnail Expert</span>
+                  <span className="text-[10px] font-black text-white/90 uppercase tracking-[0.2em]">YOUTUBE THUMBNAIL EXPERT</span>
                 </div>
-                <h2 className="text-5xl md:text-7xl font-black text-white leading-[1.1] tracking-tighter">
+                <h2 className="text-6xl md:text-[7.5rem] font-black text-white leading-[0.85] tracking-tighter">
                   Thumbnails that<br />
-                  <span className="bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent italic">Get Clicks</span>
+                  <span className="bg-gradient-to-r from-[#FF4D00] to-[#FF8A00] bg-clip-text text-transparent italic font-black">Get Clicks</span>
                 </h2>
                 <p className="text-lg md:text-xl text-gray-400 font-medium max-w-xl leading-relaxed">
                   I design scroll-stopping YouTube thumbnails that boost your <span className="text-white font-bold">CTR</span> and grow your channel. Let's make your videos <span className="text-white font-bold">impossible to ignore</span>.
                 </p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                 <div className="bg-white/5 border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center transition-all hover:bg-white/10">
-                    <div className="text-orange-500 mb-3"><Youtube className="w-6 h-6" /></div>
-                    <div className="text-2xl font-black text-white">500+</div>
-                    <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-1">Thumbnails</div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                 <div className="bg-white/5 border border-white/5 rounded-3xl p-8 flex flex-col items-center justify-center text-center transition-all hover:bg-white/10 group">
+                    <div className="text-orange-500 mb-4 group-hover:scale-110 transition-transform"><Youtube className="w-7 h-7" /></div>
+                    <div className="text-4xl font-black text-white tracking-tighter">500+</div>
+                    <div className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mt-2">Thumbnails</div>
                  </div>
-                 <div className="bg-white/5 border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center transition-all hover:bg-white/10">
-                    <div className="text-green-500 mb-3"><TrendingUp className="w-6 h-6" /></div>
-                    <div className="text-2xl font-black text-white">40%</div>
-                    <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-1">Avg CTR Boost</div>
+                 <div className="bg-white/5 border border-white/5 rounded-3xl p-8 flex flex-col items-center justify-center text-center transition-all hover:bg-white/10 group">
+                    <div className="text-green-500 mb-4 group-hover:scale-110 transition-transform"><TrendingUp className="w-7 h-7" /></div>
+                    <div className="text-4xl font-black text-white tracking-tighter">40%</div>
+                    <div className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mt-2">Avg CTR Boost</div>
                  </div>
-                 <div className="bg-white/5 border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center transition-all hover:bg-white/10">
-                    <div className="text-blue-500 mb-3"><Users className="w-6 h-6" /></div>
-                    <div className="text-2xl font-black text-white">10M+</div>
-                    <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-1">Views Generated</div>
+                 <div className="bg-white/5 border border-white/5 rounded-3xl p-8 flex flex-col items-center justify-center text-center transition-all hover:bg-white/10 group">
+                    <div className="text-blue-500 mb-4 group-hover:scale-110 transition-transform"><Users className="w-7 h-7" /></div>
+                    <div className="text-4xl font-black text-white tracking-tighter">10M+</div>
+                    <div className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mt-2">Views Generated</div>
                  </div>
               </div>
+
               <div className="flex flex-wrap gap-5 pt-4">
-                <a href="#work" onClick={(e) => scrollToSection(e, 'work')} className="px-10 py-5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl font-black text-sm text-white uppercase tracking-widest flex items-center gap-3 transition-all hover:scale-105 shadow-xl shadow-orange-600/10">
+                <a href="#work" onClick={(e) => scrollToSection(e, 'work')} className="px-14 py-5 bg-gradient-to-r from-[#FF4D00] to-[#FF8A00] rounded-2xl font-black text-xs text-white uppercase tracking-[0.2em] flex items-center gap-3 transition-all hover:scale-105 shadow-xl shadow-orange-600/20 active:scale-95">
                   <Play className="w-4 h-4 fill-white" />
-                  View My Work
+                  VIEW MY WORK
                 </a>
-                <button onClick={() => setShowOrderForm(true)} className="px-10 py-5 bg-white/5 border border-white/10 rounded-2xl font-black text-sm text-white uppercase tracking-widest flex items-center gap-3 transition-all hover:bg-white/10">
+                <button onClick={() => setShowOrderForm(true)} className="px-14 py-5 bg-white/5 border border-white/10 rounded-2xl font-black text-xs text-white uppercase tracking-[0.2em] flex items-center gap-3 transition-all hover:bg-white/10 hover:border-white/20 active:scale-95">
                   <Sparkles className="w-4 h-4 text-orange-500" />
-                  Get a Quote
+                  GET A QUOTE
                 </button>
               </div>
             </div>
@@ -489,8 +512,10 @@ const App: React.FC = () => {
       <footer className="py-12 px-6 md:px-12 bg-slate-900 dark:bg-black border-t border-white/5">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl overflow-hidden shadow-xl bg-[#FF4D00]">
-              <LogoImage />
+            <div className="w-14 h-14 rounded-2xl overflow-hidden shadow-xl bg-[#FF4D00] p-0.5 bg-gradient-to-br from-orange-500 to-red-600">
+              <div className="w-full h-full rounded-[0.9rem] overflow-hidden bg-black">
+                <LogoImage />
+              </div>
             </div>
             <div className="flex flex-col">
               <span className="font-black text-lg text-white uppercase tracking-tighter leading-none">AYUSH <span className="text-[#FF4D00]">GFX</span></span>
@@ -509,14 +534,8 @@ const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => {
   const [hasError, setHasError] = useState(false);
 
   return (
-    <div className="group relative rounded-[2rem] overflow-hidden bg-slate-100 dark:bg-zinc-900/50 border border-black/5 dark:border-white/5 shadow-2xl transition-all cursor-pointer">
-      <div className="absolute top-5 left-5 z-20">
-        <span className="px-5 py-1.5 bg-black/90 text-[9px] font-black text-white rounded-full uppercase tracking-[0.2em]">
-          {item.category}
-        </span>
-      </div>
-      
-      <div className="aspect-video relative overflow-hidden bg-zinc-800">
+    <div className="group relative rounded-[2rem] overflow-hidden bg-[#0a0a0a] dark:bg-[#0a0a0a] border border-white/5 shadow-2xl transition-all hover:scale-[1.02] cursor-pointer">
+      <div className="aspect-video relative overflow-hidden bg-zinc-900 border-b border-white/5">
         {!isLoaded && !hasError && (
           <div className="absolute inset-0 flex items-center justify-center">
             <Loader2 className="w-8 h-8 text-orange-600 animate-spin opacity-50" />
@@ -532,17 +551,25 @@ const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => {
           <img 
             src={item.imageUrl} 
             alt={item.title} 
-            className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
             onLoad={() => setIsLoaded(true)}
             onError={() => setHasError(true)}
           />
         )}
-        
-        {/* Cinematic Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
-           <p className="text-orange-500 text-[10px] font-black uppercase tracking-[0.3em] mb-2 translate-y-4 group-hover:translate-y-0 transition-transform">Premium Visual</p>
-           <h3 className="text-xl font-black text-white leading-tight translate-y-4 group-hover:translate-y-0 transition-transform delay-75">{item.title}</h3>
+      </div>
+
+      <div className="p-6 space-y-3 bg-[#0a0a0a]">
+        <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF4D00]">
+          {item.category}
         </div>
+        <h3 className="text-lg font-black text-white leading-tight tracking-tight h-14 overflow-hidden line-clamp-2">
+          {item.title}
+        </h3>
+        {item.ctr && (
+          <div className="text-[11px] font-bold text-green-500 uppercase tracking-widest">
+            {item.ctr}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -550,7 +577,7 @@ const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => {
 
 const ContactLink: React.FC<{ icon: React.ReactNode, label: string, value: string }> = ({ icon, label, value }) => (
   <div className="flex flex-col items-center gap-4 cursor-pointer group">
-    <div className="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-[#FF4D00] transition-colors">
+    <div className="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-3xl flex items-center justify-center group-hover:bg-[#FF4D00] transition-colors">
       <div className="text-zinc-500 dark:text-zinc-400 group-hover:text-white transition-colors">{icon}</div>
     </div>
     <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{label}</p>
