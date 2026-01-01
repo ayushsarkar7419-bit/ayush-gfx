@@ -8,21 +8,25 @@ export const THUMBNAILS: ThumbnailItem[] = [
     id: 'g7', 
     title: 'Minecraft Arctic Survival', 
     category: 'Gaming', 
-    imageUrl: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?q=80&w=1000&auto=format&fit=crop', // Representing the Arctic Minecraft theme
+    // -------------------------------------------------------------------------
+    // REPLACE THE URL BELOW WITH YOUR UPLOADED IMAGE PATH
+    // Example for local file in public folder: '/my-minecraft-thumbnail.jpg'
+    // -------------------------------------------------------------------------
+    imageUrl: 'https://images.unsplash.com/photo-1607988795621-e0050d562137?q=80&w=1000&auto=format&fit=crop', 
     ctr: '18.4% CTR'
   },
   { 
     id: 'g1', 
     title: 'Gaming Live Stream', 
     category: 'Gaming', 
-    imageUrl: 'https://images.unsplash.com/photo-1605898930776-766ca8a29952?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop',
     ctr: '12.8% CTR'
   },
   { 
     id: 'g2', 
     title: 'Champion Valorant', 
     category: 'Gaming', 
-    imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1614015859172-7369061d562b?q=80&w=1000&auto=format&fit=crop',
     ctr: '15.2% CTR'
   },
   { 

@@ -530,32 +530,35 @@ const App: React.FC = () => {
 };
 
 const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => {
+  const [imgSrc, setImgSrc] = useState(item.imageUrl);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setImgSrc(item.imageUrl);
+    setIsLoaded(false);
+  }, [item.imageUrl]);
+
+  const handleImageError = () => {
+    // Fallback image - using a high quality abstract gaming background
+    setImgSrc("https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop");
+  };
 
   return (
     <div className="group relative rounded-[2rem] overflow-hidden bg-[#0a0a0a] dark:bg-[#0a0a0a] border border-white/5 shadow-2xl transition-all hover:scale-[1.02] cursor-pointer">
       <div className="aspect-video relative overflow-hidden bg-zinc-900 border-b border-white/5">
-        {!isLoaded && !hasError && (
+        {!isLoaded && (
           <div className="absolute inset-0 flex items-center justify-center">
             <Loader2 className="w-8 h-8 text-orange-600 animate-spin opacity-50" />
           </div>
         )}
         
-        {hasError ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-            <Youtube className="w-12 h-12 text-zinc-700 mb-2" />
-            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Image Unavailable</span>
-          </div>
-        ) : (
-          <img 
-            src={item.imageUrl} 
-            alt={item.title} 
-            className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-            onLoad={() => setIsLoaded(true)}
-            onError={() => setHasError(true)}
-          />
-        )}
+        <img 
+          src={imgSrc} 
+          alt={item.title} 
+          className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+          onLoad={() => setIsLoaded(true)}
+          onError={handleImageError}
+        />
       </div>
 
       <div className="p-6 space-y-3 bg-[#0a0a0a]">
