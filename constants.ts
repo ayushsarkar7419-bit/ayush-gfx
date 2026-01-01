@@ -12,6 +12,7 @@ export const THUMBNAILS: ThumbnailItem[] = [
   { id: 'g6', title: 'Minecraft McDonald\'s Tycoon', category: 'Gaming', imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1000&auto=format&fit=crop' },
   { id: 'g7', title: 'A Minecraft Movie: Real Review', category: 'Gaming', imageUrl: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1000&auto=format&fit=crop' },
   { id: 'g8', title: 'Minecraft: Polar Bear Arctic Survival', category: 'Gaming', imageUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000&auto=format&fit=crop' },
+  { id: 'g9', title: '100 Days in Frozen Arctic', category: 'Gaming', imageUrl: 'https://images.unsplash.com/photo-1517783999520-f068d7431a60?q=80&w=1000&auto=format&fit=crop' },
   { id: '2', title: 'Day in Tokyo', category: 'Vlog', imageUrl: 'https://picsum.photos/600/400?random=2' },
   { id: '3', title: 'The Rise of AI', category: 'Documentary', imageUrl: 'https://picsum.photos/600/400?random=3' },
   { id: '5', title: 'New M3 Pro Setup', category: 'Tech', imageUrl: 'https://picsum.photos/600/400?random=5' },
