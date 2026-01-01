@@ -324,26 +324,28 @@ const App: React.FC = () => {
             <div className="lg:col-span-5 flex justify-center lg:justify-start">
               <div className="relative w-full max-w-[460px]">
                 {/* Available Now Status Badge */}
-                <div className="absolute -top-4 -right-2 z-30 bg-black/60 backdrop-blur-xl border border-white/10 px-4 py-1.5 rounded-full flex items-center gap-2 shadow-2xl">
+                <div className="absolute -top-4 -right-4 z-30 bg-black/60 backdrop-blur-xl border border-white/10 px-4 py-1.5 rounded-full flex items-center gap-2 shadow-2xl">
                   <div className="w-1.5 h-1.5 bg-green-500 rounded-full shadow-[0_0_8px_#22c55e]" />
                   <span className="text-[10px] font-black text-white uppercase tracking-widest">AVAILABLE NOW</span>
                 </div>
                 
-                {/* Main Branding Container */}
-                <div className="relative z-10 aspect-[1/1] rounded-[4rem] overflow-hidden border-2 border-orange-500/20 shadow-[0_0_80px_rgba(255,77,0,0.15)] bg-zinc-950 group">
-                  <LogoImage className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                  
-                  {/* YouTube Pro Badge overlay */}
-                  <div className="absolute bottom-10 right-8 z-30 bg-black/80 backdrop-blur-xl border border-white/10 px-5 py-2.5 rounded-2xl flex items-center gap-3 shadow-2xl transition-transform hover:scale-105">
-                    <div className="w-8 h-8 bg-red-600/20 flex items-center justify-center rounded-lg border border-red-600/40">
-                      <Play className="w-4 h-4 text-red-600 fill-red-600" />
+                {/* Main Branding Container with Glass Border Style */}
+                <div className="relative z-10 aspect-[1/1] rounded-[2.5rem] p-3 bg-gradient-to-b from-white/10 to-white/5 border border-white/10 shadow-[0_0_80px_rgba(255,77,0,0.15)] backdrop-blur-sm group">
+                  <div className="w-full h-full rounded-[2rem] overflow-hidden bg-zinc-950 relative">
+                    <LogoImage className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                    
+                    {/* YouTube Pro Badge overlay */}
+                    <div className="absolute bottom-8 right-6 z-30 bg-black/60 backdrop-blur-xl border border-white/10 px-5 py-2.5 rounded-2xl flex items-center gap-3 shadow-2xl transition-transform hover:scale-105">
+                      <div className="w-8 h-8 bg-red-600/20 flex items-center justify-center rounded-lg border border-red-600/40">
+                        <Play className="w-4 h-4 text-red-600 fill-red-600" />
+                      </div>
+                      <span className="text-xs font-black text-white uppercase tracking-widest">YOUTUBE PRO</span>
                     </div>
-                    <span className="text-xs font-black text-white uppercase tracking-widest">YOUTUBE PRO</span>
                   </div>
                 </div>
 
                 {/* Rating Badge */}
-                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-30 bg-black/60 backdrop-blur-xl border border-white/10 px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 min-w-[200px] justify-center">
+                <div className="absolute -bottom-6 left-6 z-30 bg-black/60 backdrop-blur-xl border border-white/10 px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 min-w-[200px] justify-center">
                    <div className="flex gap-1">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className="w-3.5 h-3.5 text-orange-500 fill-orange-500" />
