@@ -45,3 +45,11 @@ export const FEATURES: Feature[] = [
     icon: 'CheckCircle2' 
   },
 ];
+
+export const ABOUT_CONTENT = {
+  name: "Ayush",
+  role: "Visual Strategist & Thumbnail Expert",
+  experience: "4+ Years",
+  bio: "I am a visual strategist with over 4 years of experience crafting high-converting thumbnails for some of the biggest creators on YouTube. My passion lies in the intersection of data-driven psychology and cinematic art. I don't just make things look 'cool'; I design them to stop the scroll and force the click.",
+  mission: "My mission is to help creators maximize their reach by ensuring their first impression—the thumbnail—is unmissable. I've helped channels grow from a few hundred views to millions by simply optimizing the visual 'entry point' of their content."
+};
