@@ -18,9 +18,7 @@ import {
   Sun,
   Moon,
   ArrowRight,
-  X,
-  Info,
-  ArrowLeft
+  X
 } from 'lucide-react';
 import { CATEGORIES, THUMBNAILS, SKILLS, FEATURES } from './constants';
 import { Category, ThumbnailItem, Review } from './types';
@@ -38,7 +36,7 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
   }, [onComplete]);
 
   return (
-    <div className={`fixed inset-0 z-[100] bg-[#050505] flex flex-col items-center justify-center transition-all ${exit ? 'loading-exit' : ''}`}>
+    <div className={`fixed inset-0 z-[1000] bg-[#050505] flex flex-col items-center justify-center transition-all ${exit ? 'loading-exit' : ''}`}>
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-orange-600/10 blur-[150px] rounded-full animate-pulse" />
       </div>
@@ -92,74 +90,83 @@ const AnimatedRoles = () => {
 };
 
 const CustomCursor: React.FC<{ accentColor: string }> = ({ accentColor }) => {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const [isHovering, setIsHovering] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  
-  const mousePos = useRef({ x: 0, y: 0 });
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const mousePos = useRef({ x: -100, y: -100 });
+  const targetPos = useRef({ x: -100, y: -100 });
+  const [isHovered, setIsHovered] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
+    const cursor = cursorRef.current;
+    if (!cursor) return;
+
     const onMouseMove = (e: MouseEvent) => {
-      if (!isVisible) setIsVisible(true);
-      mousePos.current = { x: e.clientX, y: e.clientY };
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
-      }
+      targetPos.current = { x: e.clientX, y: e.clientY };
     };
+
+    const onMouseDown = () => setIsActive(true);
+    const onMouseUp = () => setIsActive(false);
 
     const onMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (target.closest('button, a, input, textarea, [role="button"], input[type="range"], .thumbnail-card, .interactive-card')) {
-        setIsHovering(true);
+      if (target.closest('button, a, input, [role="button"], .thumbnail-card, .interactive-card, .cursor-pointer')) {
+        setIsHovered(true);
       }
     };
 
     const onMouseOut = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (target.closest('button, a, input, textarea, [role="button"], input[type="range"], .thumbnail-card, .interactive-card')) {
-        setIsHovering(false);
+      if (target.closest('button, a, input, [role="button"], .thumbnail-card, .interactive-card, .cursor-pointer')) {
+        setIsHovered(false);
       }
     };
 
-    const onMouseDown = () => setIsClicked(true);
-    const onMouseUp = () => setIsClicked(false);
+    let frame: number;
+    const update = () => {
+      // Linear interpolation for smoothness
+      mousePos.current.x += (targetPos.current.x - mousePos.current.x) * 0.2;
+      mousePos.current.y += (targetPos.current.y - mousePos.current.y) * 0.2;
+      
+      if (cursor) {
+        cursor.style.transform = `translate3d(${mousePos.current.x}px, ${mousePos.current.y}px, 0)`;
+      }
+      frame = requestAnimationFrame(update);
+    };
 
-    const onMouseLeave = () => setIsVisible(false);
-    const onMouseEnter = () => setIsVisible(true);
-
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
-    window.addEventListener('mouseover', onMouseOver);
-    window.addEventListener('mouseout', onMouseOut);
+    window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mouseup', onMouseUp);
-    document.addEventListener('mouseleave', onMouseLeave);
-    document.addEventListener('mouseenter', onMouseEnter);
+    window.addEventListener('mouseover', onMouseOver);
+    window.addEventListener('mouseout', onMouseOut);
     
+    update();
+
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseover', onMouseOver);
-      window.removeEventListener('mouseout', onMouseOut);
       window.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mouseup', onMouseUp);
-      document.removeEventListener('mouseleave', onMouseLeave);
-      document.removeEventListener('mouseenter', onMouseEnter);
+      window.removeEventListener('mouseover', onMouseOver);
+      window.removeEventListener('mouseout', onMouseOut);
+      cancelAnimationFrame(frame);
     };
-  }, [isVisible]);
+  }, []);
 
   return (
-    <div id="custom-cursor-container" 
-      className={`${isHovering ? 'cursor-hover' : ''} ${isClicked ? 'cursor-click' : ''}`}
-      style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.3s ease' }}
+    <div 
+      ref={cursorRef}
+      className="fixed top-0 left-0 pointer-events-none will-change-transform"
+      style={{ 
+        zIndex: 2147483647, // Ensure it's above everything
+      }}
     >
       <div 
-        ref={dotRef} 
-        id="custom-cursor-dot" 
+        className={`rounded-full transition-all duration-300 ease-out -translate-x-1/2 -translate-y-1/2 ${isActive ? 'scale-75' : 'scale-100'}`}
         style={{ 
-          backgroundColor: accentColor, 
-          boxShadow: isHovering ? `0 0 15px ${accentColor}` : `0 0 10px ${accentColor}`,
-          transition: 'width 0.3s ease, height 0.3s ease, background-color 0.4s ease, box-shadow 0.3s ease',
-          color: accentColor
+          width: isHovered ? '40px' : '8px',
+          height: isHovered ? '40px' : '8px',
+          backgroundColor: isHovered ? 'transparent' : accentColor,
+          border: isHovered ? `2px solid ${accentColor}` : 'none',
+          boxShadow: isHovered ? `0 0 20px ${accentColor}44` : `0 0 10px ${accentColor}`,
         }}
       />
     </div>
@@ -218,10 +225,8 @@ const App: React.FC = () => {
     }
   }, [showOrderForm]);
 
-  // Observer for skills section
   useEffect(() => {
     if (isLoading) return;
-    
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -231,11 +236,9 @@ const App: React.FC = () => {
       },
       { threshold: 0.2 }
     );
-
     if (skillsRef.current) {
       observer.observe(skillsRef.current);
     }
-
     return () => observer.disconnect();
   }, [isLoading]);
 
@@ -274,16 +277,14 @@ const App: React.FC = () => {
     return <LoadingScreen onComplete={() => setIsLoading(false)} />;
   }
 
-  // Determine active cursor color based on view
   const cursorAccent = showOrderForm ? '#a855f7' : '#ea580c';
 
   return (
-    <div className="min-h-screen transition-colors duration-300 bg-white dark:bg-[#050505] text-slate-900 dark:text-[#f8fafc] animate-fade-in font-sans selection:bg-orange-600 selection:text-white">
-      <CustomCursor accentColor={cursorAccent} />
+    <div className="min-h-screen transition-colors duration-300 bg-white dark:bg-[#050505] text-slate-900 dark:text-[#f8fafc] animate-fade-in font-sans selection:bg-orange-600 selection:text-white relative">
       
-      {/* Navbar with Entrance Animation */}
+      {/* Navbar */}
       <nav className="fixed top-0 w-full z-50 glass py-4 px-6 md:px-12 flex justify-between items-center transition-all border-b border-black/5 dark:border-white/5 animate-slide-down">
-        <div className="flex items-center gap-3 group cursor-pointer animate-fade-in" style={{ animationDelay: '200ms' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        <div className="flex items-center gap-3 group cursor-none animate-fade-in" style={{ animationDelay: '200ms' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center font-bold text-xl italic shadow-lg shadow-orange-600/30 text-white transition-transform group-hover:scale-110">
             A
           </div>
@@ -377,7 +378,7 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* Stats - MOVED LOWER AS REQUESTED */}
+      {/* Stats */}
       <section className="py-20 px-6 md:px-12 bg-slate-50 dark:bg-[#080808] border-y border-black/5 dark:border-white/5 transition-colors">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between gap-12 items-center">
           <StatBox icon={<Youtube className="w-8 h-8 text-red-600" />} value="10M+" label="Views Generated" />
@@ -499,177 +500,52 @@ const App: React.FC = () => {
       {/* ORDER POPUP MODAL */}
       {showOrderForm && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-10 animate-fade-in">
-          {/* Backdrop */}
-          <div 
-            className="absolute inset-0 bg-black/90 backdrop-blur-xl" 
-            onClick={() => setShowOrderForm(false)}
-          />
-          
-          {/* Modal Content */}
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" onClick={() => setShowOrderForm(false)} />
           <div className="relative z-10 w-full max-w-7xl bg-[#050505] border border-white/5 rounded-[3rem] shadow-2xl overflow-y-auto max-h-[90vh] custom-scrollbar-niche scale-in">
-            {/* Close Button */}
-            <button 
-              onClick={() => setShowOrderForm(false)}
-              className="absolute top-8 right-8 z-[120] w-12 h-12 bg-[#111111] border border-white/10 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all group active:scale-90"
-            >
+            <button onClick={() => setShowOrderForm(false)} className="absolute top-8 right-8 z-[120] w-12 h-12 bg-[#111111] border border-white/10 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all group active:scale-90">
               <X className="w-6 h-6 group-hover:rotate-90 transition-transform" />
             </button>
-
-            <section className="py-12 md:py-20 px-8 md:px-16 selection:bg-purple-600">
-              <div className="relative">
-                <div className="mb-12 md:mb-20">
-                  <h2 className="text-6xl md:text-[8rem] font-black tracking-tighter text-white mb-2 leading-[0.85] select-none">
-                    Order <span className="bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]">Now</span>
-                  </h2>
-                  <p className="text-[10px] md:text-[12px] font-bold uppercase tracking-[0.4em] text-zinc-500">
-                    PRECISION CREATIVE ASSETS FOR SERIOUS CREATORS.
-                  </p>
+            <section className="py-12 md:py-20 px-8 md:px-16">
+              <div className="mb-12 md:mb-20">
+                <h2 className="text-6xl md:text-[8rem] font-black tracking-tighter text-white mb-2 leading-[0.85] select-none">
+                  Order <span className="bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent">Now</span>
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16">
+                <div className="lg:col-span-7 space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <input type="text" placeholder="Full Name" className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-2xl px-6 py-5 text-white outline-none" />
+                    <input type="email" placeholder="Email Address" className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-2xl px-6 py-5 text-white outline-none" />
+                  </div>
+                  <input type="text" placeholder="Phone / WhatsApp" className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-2xl px-6 py-5 text-white outline-none" />
+                  <div className="max-h-[250px] overflow-y-auto pr-2 custom-scrollbar-niche">
+                    <div className="flex flex-wrap gap-2">
+                      {niches.map(niche => (
+                        <button key={niche} onClick={() => handleNicheSelect(niche)} className={`px-5 py-3 rounded-xl text-[10px] font-black border ${selectedNiche === niche ? 'bg-white text-black' : 'bg-[#1a1a1a] text-zinc-300 border-white/5'}`}>{niche}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <textarea rows={3} placeholder="Project Details" className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-[2rem] px-6 py-6 text-white outline-none resize-none" />
                 </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16">
-                  {/* Left Column: Form Info */}
-                  <div className="lg:col-span-7 space-y-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1">Full Name</label>
-                        <input type="text" placeholder="e.g. MrBeast" className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-2xl px-6 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1">Email Address</label>
-                        <input type="email" placeholder="contact@channel.com" className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-2xl px-6 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
+                <div className="lg:col-span-5 space-y-8">
+                  <div className="bg-[#080808] p-8 rounded-[3rem] border border-white/5">
+                    <div className="flex justify-between items-center mb-8">
+                      <span className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Pricing Bracket</span>
+                      <div className="flex bg-black p-1 rounded-lg border border-white/5">
+                        <button onClick={() => setCurrency('INR')} className={`px-4 py-1.5 rounded-md text-[10px] font-black transition-all ${currency === 'INR' ? 'bg-white text-black' : 'text-zinc-500'}`}>INR</button>
+                        <button onClick={() => setCurrency('USD')} className={`px-4 py-1.5 rounded-md text-[10px] font-black transition-all ${currency === 'USD' ? 'bg-white text-black' : 'text-zinc-500'}`}>USD</button>
                       </div>
                     </div>
-
-                    <div className="space-y-2">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1">Phone / Whatsapp (Mandatory)</label>
-                      <input type="text" placeholder="+91 00000 00000" className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-2xl px-6 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
-                    </div>
-
-                    <div className="space-y-4">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1 block">Select Your Niche</label>
-                      <div className="max-h-[250px] overflow-y-auto pr-2 custom-scrollbar-niche">
-                        <div className="flex flex-wrap gap-2 p-1">
-                          {niches.map(niche => (
-                            <button
-                              key={niche}
-                              onClick={() => handleNicheSelect(niche)}
-                              className={`px-5 py-3 rounded-xl text-[10px] md:text-[11px] font-black tracking-wider transition-all border ${
-                                selectedNiche === niche
-                                  ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.2)] scale-105 z-10'
-                                  : 'bg-[#1a1a1a] text-zinc-300 border-white/5 hover:border-zinc-700'
-                              }`}
-                            >
-                              {niche}
-                            </button>
-                          ))}
-                        </div>
+                    <div className="space-y-6">
+                      <input type="range" min={currency === 'INR' ? 1300 : 20} max={currency === 'INR' ? 10000 : 150} step={currency === 'INR' ? 100 : 5} value={pricePerThumb} onChange={(e) => setPricePerThumb(Number(e.target.value))} className="w-full accent-purple-600" />
+                      <input type="range" min="1" max="10" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full accent-purple-600" />
+                      <div className="text-center pt-8 border-t border-white/5">
+                        <p className="text-4xl font-black text-white">{currency === 'INR' ? '₹' : '$'}{estimatedInvestment.toLocaleString()}</p>
+                        <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-2">Estimated Investment</p>
                       </div>
-                      
-                      {selectedNiche === 'OTHER' && (
-                        <div className="mt-4 animate-fade-in">
-                          <input 
-                            type="text" 
-                            value={otherNicheText}
-                            onChange={(e) => setOtherNicheText(e.target.value)}
-                            placeholder="Please specify your niche..." 
-                            className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-xl px-6 py-4 text-white outline-none transition-all placeholder:text-zinc-700 text-xs font-black uppercase tracking-widest shadow-inner"
-                          />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1 block">Reference Links / Competitors</label>
-                      <input type="text" placeholder="https://youtube.com/..." className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-2xl px-6 py-5 text-white outline-none transition-all placeholder:text-zinc-700" />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-zinc-400 ml-1 block">Project Details & Notes</label>
-                      <textarea rows={3} placeholder="Describe your vision, colors, and key messaging..." className="w-full bg-[#111111] border border-white/5 focus:border-purple-600/50 rounded-[2rem] px-6 py-6 text-white outline-none transition-all placeholder:text-zinc-700 resize-none" />
                     </div>
                   </div>
-
-                  {/* Right Column: Pricing Engine */}
-                  <div className="lg:col-span-5 flex flex-col gap-6">
-                    <div className="space-y-8 p-8 md:p-10 bg-[#080808] rounded-[3rem] border border-white/5 relative overflow-hidden flex-1 shadow-2xl">
-                      <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none">
-                        <span className="text-[12rem] font-black tracking-tighter select-none">GFX</span>
-                      </div>
-
-                      <div className="relative z-10 space-y-8">
-                        <div className="flex justify-between items-center">
-                          <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Investment Bracket</h4>
-                          <div className="flex bg-[#111111] rounded-xl p-1 border border-white/5">
-                            <button onClick={() => setCurrency('INR')} className={`px-4 py-1.5 rounded-lg text-[10px] font-black transition-all ${currency === 'INR' ? 'bg-white text-black shadow-lg' : 'text-zinc-500'}`}>INR</button>
-                            <button onClick={() => setCurrency('USD')} className={`px-4 py-1.5 rounded-lg text-[10px] font-black transition-all ${currency === 'USD' ? 'bg-white text-black shadow-lg' : 'text-zinc-500'}`}>USD</button>
-                          </div>
-                        </div>
-
-                        <div className="space-y-6">
-                          <div className="space-y-5">
-                            <div className="flex justify-between items-end">
-                              <div>
-                                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">Price per Thumbnail</p>
-                                <p className="text-[11px] text-zinc-600">Starting from {currency === 'INR' ? '₹' : '$'}{currency === 'INR' ? '1,300' : '20'}</p>
-                              </div>
-                              <div className="bg-[#111111] border border-purple-600/30 px-5 py-3 rounded-2xl shadow-lg shadow-purple-600/5">
-                                 <span className="text-purple-500 font-black text-xl">{currency === 'INR' ? '₹' : '$'}{pricePerThumb.toLocaleString()}</span>
-                              </div>
-                            </div>
-                            <input 
-                              type="range" 
-                              min={currency === 'INR' ? 1300 : 20} 
-                              max={currency === 'INR' ? 10000 : 150} 
-                              step={currency === 'INR' ? 100 : 5} 
-                              value={pricePerThumb} 
-                              onChange={(e) => setPricePerThumb(Number(e.target.value))} 
-                              className="w-full h-1.5 bg-[#1a1a1a] rounded-full appearance-none cursor-pointer accent-purple-600" 
-                            />
-                          </div>
-
-                          <div className="space-y-5">
-                            <div className="flex justify-between items-end">
-                              <div>
-                                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">Thumbnail Quantity</p>
-                                <p className="text-[11px] text-zinc-600">Bulk orders recommended</p>
-                              </div>
-                              <div className="bg-[#111111] border border-purple-600/30 px-6 py-3 rounded-2xl shadow-lg shadow-purple-600/5">
-                                 <span className="text-purple-500 font-black text-xl">{quantity}</span>
-                              </div>
-                            </div>
-                            <input 
-                              type="range" 
-                              min="1" 
-                              max="10" 
-                              value={quantity} 
-                              onChange={(e) => setQuantity(Number(e.target.value))} 
-                              className="w-full h-1.5 bg-[#1a1a1a] rounded-full appearance-none cursor-pointer accent-purple-600" 
-                            />
-                          </div>
-                        </div>
-
-                        <div className="mt-8 pt-8 border-t border-white/5 text-center flex flex-col items-center">
-                          <div className="flex items-baseline gap-1 mb-2">
-                            <span className="text-xl md:text-2xl font-black text-white/40">{currency === 'INR' ? '₹' : '$'}</span>
-                            <p className="text-4xl md:text-[4.8rem] font-black text-white tracking-tighter leading-none">
-                              {estimatedInvestment.toLocaleString()}
-                            </p>
-                          </div>
-                          <p className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-500">ESTIMATED INVESTMENT</p>
-                          <div className="w-16 h-1 bg-gradient-to-r from-purple-600 to-indigo-600 mt-6 rounded-full shadow-[0_0_10px_rgba(147,51,234,0.5)]" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <button className="w-full py-8 bg-purple-900/10 hover:bg-gradient-to-r hover:from-purple-600 hover:to-indigo-600 transition-all rounded-[2rem] text-[12px] font-black uppercase tracking-[0.4em] text-purple-400 hover:text-white border border-purple-600/20 active:scale-[0.97] shadow-xl group">
-                        <span className="group-hover:scale-105 inline-block transition-transform">Confirm Order Inquiry</span>
-                      </button>
-                      <p className="text-center text-[8px] font-bold text-zinc-700 tracking-[0.3em] uppercase">
-                        SECURE 256-BIT ENCRYPTED TRANSMISSION
-                      </p>
-                    </div>
-                  </div>
+                  <button className="w-full py-8 bg-purple-600 hover:bg-purple-700 text-white rounded-[2rem] text-xs font-black uppercase tracking-widest transition-all shadow-xl">Confirm Inquiry</button>
                 </div>
               </div>
             </section>
@@ -677,50 +553,26 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* Custom Keyframe Animations */}
+      {/* Modern High-Performance Cursor */}
+      <CustomCursor accentColor={cursorAccent} />
+
       <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes slideDown {
-          from { transform: translateY(-100%); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-        .animate-slide-down {
-          animation: slideDown 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-        }
-        .custom-scrollbar-niche::-webkit-scrollbar {
-          width: 4px;
-        }
-        .custom-scrollbar-niche::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar-niche::-webkit-scrollbar-thumb {
-          background: rgba(147, 51, 234, 0.2);
-          border-radius: 10px;
-        }
-        .custom-scrollbar-niche::-webkit-scrollbar-thumb:hover {
-          background: rgba(147, 51, 234, 0.5);
-        }
-        @keyframes scaleIn {
-          from { transform: scale(0.95); opacity: 0; }
-          to { transform: scale(1); opacity: 1; }
-        }
-        .scale-in {
-          animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-          animation: fadeIn 0.8s ease forwards;
-        }
+        @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-slide-down { animation: slideDown 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.8s ease forwards; }
+        .custom-scrollbar-niche::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar-niche::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar-niche::-webkit-scrollbar-thumb { background: rgba(147, 51, 234, 0.2); border-radius: 10px; }
+        @keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .scale-in { animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}} />
     </div>
   );
 };
 
-/* Helper Components */
 const StatBox: React.FC<{ icon: React.ReactNode, value: string, label: string }> = ({ icon, value, label }) => (
-  <div className="flex flex-col items-center group interactive-card">
+  <div className="flex flex-col items-center group interactive-card cursor-none">
     <div className="mb-6 p-4 bg-black/5 dark:bg-white/5 rounded-[2rem] group-hover:bg-orange-600/10 transition-colors border border-black/5 dark:border-white/5">
       {icon}
     </div>
@@ -730,11 +582,9 @@ const StatBox: React.FC<{ icon: React.ReactNode, value: string, label: string }>
 );
 
 const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => (
-  <div className="group relative rounded-3xl overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5 cursor-pointer shadow-xl hover:shadow-orange-600/10 transition-all duration-500 thumbnail-card">
+  <div className="group relative rounded-3xl overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5 cursor-none shadow-xl hover:shadow-orange-600/10 transition-all duration-500 thumbnail-card">
     <div className="absolute top-4 left-4 z-20">
-      <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-[10px] font-black text-white rounded-full uppercase tracking-tighter border border-white/10">
-        {item.category}
-      </span>
+      <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-[10px] font-black text-white rounded-full uppercase tracking-tighter border border-white/10">{item.category}</span>
     </div>
     <div className="aspect-video overflow-hidden">
       <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -751,7 +601,7 @@ const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => (
 const FeatureCard: React.FC<{ title: string, description: string, icon: string }> = ({ title, description, icon }) => {
   const IconComponent = icon === 'Zap' ? Zap : icon === 'MousePointer2' ? MousePointer2 : icon === 'RefreshCcw' ? RefreshCcw : CheckCircle2;
   return (
-    <div className="glass p-10 rounded-[2.5rem] border border-black/10 dark:border-white/5 hover:border-orange-600 transition-all hover:-translate-y-2 group shadow-lg interactive-card">
+    <div className="glass p-10 rounded-[2.5rem] border border-black/10 dark:border-white/5 hover:border-orange-600 transition-all hover:-translate-y-2 group shadow-lg interactive-card cursor-none">
       <div className="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-[1.5rem] flex items-center justify-center mb-8 group-hover:bg-orange-600 transition-colors">
         <IconComponent className="w-8 h-8 text-orange-600 group-hover:text-white transition-colors" />
       </div>
@@ -762,7 +612,7 @@ const FeatureCard: React.FC<{ title: string, description: string, icon: string }
 };
 
 const ContactLink: React.FC<{ icon: React.ReactNode, label: string, value: string }> = ({ icon, label, value }) => (
-  <a href="#" className="flex flex-col items-center gap-4 group interactive-card">
+  <a href="#" className="flex flex-col items-center gap-4 group interactive-card cursor-none">
     <div className="w-20 h-20 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-3xl flex items-center justify-center group-hover:bg-orange-600 group-hover:scale-110 transition-all">
       <div className="text-slate-500 dark:text-gray-400 group-hover:text-white transition-colors">{React.cloneElement(icon as React.ReactElement<any>, { size: 32 })}</div>
     </div>
