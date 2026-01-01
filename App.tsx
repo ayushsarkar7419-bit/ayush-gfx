@@ -89,90 +89,6 @@ const AnimatedRoles = () => {
   );
 };
 
-const CustomCursor: React.FC<{ accentColor: string }> = ({ accentColor }) => {
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const mousePos = useRef({ x: -100, y: -100 });
-  const targetPos = useRef({ x: -100, y: -100 });
-  const [isHovered, setIsHovered] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-
-  useEffect(() => {
-    const cursor = cursorRef.current;
-    if (!cursor) return;
-
-    const onMouseMove = (e: MouseEvent) => {
-      targetPos.current = { x: e.clientX, y: e.clientY };
-    };
-
-    const onMouseDown = () => setIsActive(true);
-    const onMouseUp = () => setIsActive(false);
-
-    const onMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('button, a, input, [role="button"], .thumbnail-card, .interactive-card, .cursor-pointer')) {
-        setIsHovered(true);
-      }
-    };
-
-    const onMouseOut = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('button, a, input, [role="button"], .thumbnail-card, .interactive-card, .cursor-pointer')) {
-        setIsHovered(false);
-      }
-    };
-
-    let frame: number;
-    const update = () => {
-      // Linear interpolation for smoothness
-      mousePos.current.x += (targetPos.current.x - mousePos.current.x) * 0.2;
-      mousePos.current.y += (targetPos.current.y - mousePos.current.y) * 0.2;
-      
-      if (cursor) {
-        cursor.style.transform = `translate3d(${mousePos.current.x}px, ${mousePos.current.y}px, 0)`;
-      }
-      frame = requestAnimationFrame(update);
-    };
-
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mouseup', onMouseUp);
-    window.addEventListener('mouseover', onMouseOver);
-    window.addEventListener('mouseout', onMouseOut);
-    
-    update();
-
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mousedown', onMouseDown);
-      window.removeEventListener('mouseup', onMouseUp);
-      window.removeEventListener('mouseover', onMouseOver);
-      window.removeEventListener('mouseout', onMouseOut);
-      cancelAnimationFrame(frame);
-    };
-  }, []);
-
-  return (
-    <div 
-      ref={cursorRef}
-      className="fixed top-0 left-0 pointer-events-none will-change-transform"
-      style={{ 
-        zIndex: 2147483647, // Ensure it's above everything
-      }}
-    >
-      <div 
-        className={`rounded-full transition-all duration-300 ease-out -translate-x-1/2 -translate-y-1/2 ${isActive ? 'scale-75' : 'scale-100'}`}
-        style={{ 
-          width: isHovered ? '40px' : '8px',
-          height: isHovered ? '40px' : '8px',
-          backgroundColor: isHovered ? 'transparent' : accentColor,
-          border: isHovered ? `2px solid ${accentColor}` : 'none',
-          boxShadow: isHovered ? `0 0 20px ${accentColor}44` : `0 0 10px ${accentColor}`,
-        }}
-      />
-    </div>
-  );
-};
-
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isDark, setIsDark] = useState(true);
@@ -188,7 +104,6 @@ const App: React.FC = () => {
   const [pricePerThumb, setPricePerThumb] = useState(1300);
   const [quantity, setQuantity] = useState(1);
   const [selectedNiche, setSelectedNiche] = useState<string | null>(null);
-  const [otherNicheText, setOtherNicheText] = useState('');
 
   const niches = [
     'GAMING (FPS)', 'GAMING (MC/ROBLOX)', 'ANIME', 'TECH', 
@@ -277,14 +192,12 @@ const App: React.FC = () => {
     return <LoadingScreen onComplete={() => setIsLoading(false)} />;
   }
 
-  const cursorAccent = showOrderForm ? '#a855f7' : '#ea580c';
-
   return (
     <div className="min-h-screen transition-colors duration-300 bg-white dark:bg-[#050505] text-slate-900 dark:text-[#f8fafc] animate-fade-in font-sans selection:bg-orange-600 selection:text-white relative">
       
       {/* Navbar */}
       <nav className="fixed top-0 w-full z-50 glass py-4 px-6 md:px-12 flex justify-between items-center transition-all border-b border-black/5 dark:border-white/5 animate-slide-down">
-        <div className="flex items-center gap-3 group cursor-none animate-fade-in" style={{ animationDelay: '200ms' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        <div className="flex items-center gap-3 group animate-fade-in cursor-pointer" style={{ animationDelay: '200ms' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center font-bold text-xl italic shadow-lg shadow-orange-600/30 text-white transition-transform group-hover:scale-110">
             A
           </div>
@@ -553,9 +466,6 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* Modern High-Performance Cursor */}
-      <CustomCursor accentColor={cursorAccent} />
-
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .animate-slide-down { animation: slideDown 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
@@ -572,7 +482,7 @@ const App: React.FC = () => {
 };
 
 const StatBox: React.FC<{ icon: React.ReactNode, value: string, label: string }> = ({ icon, value, label }) => (
-  <div className="flex flex-col items-center group interactive-card cursor-none">
+  <div className="flex flex-col items-center group interactive-card">
     <div className="mb-6 p-4 bg-black/5 dark:bg-white/5 rounded-[2rem] group-hover:bg-orange-600/10 transition-colors border border-black/5 dark:border-white/5">
       {icon}
     </div>
@@ -582,7 +492,7 @@ const StatBox: React.FC<{ icon: React.ReactNode, value: string, label: string }>
 );
 
 const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => (
-  <div className="group relative rounded-3xl overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5 cursor-none shadow-xl hover:shadow-orange-600/10 transition-all duration-500 thumbnail-card">
+  <div className="group relative rounded-3xl overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5 shadow-xl hover:shadow-orange-600/10 transition-all duration-500 thumbnail-card cursor-pointer">
     <div className="absolute top-4 left-4 z-20">
       <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-[10px] font-black text-white rounded-full uppercase tracking-tighter border border-white/10">{item.category}</span>
     </div>
@@ -601,7 +511,7 @@ const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => (
 const FeatureCard: React.FC<{ title: string, description: string, icon: string }> = ({ title, description, icon }) => {
   const IconComponent = icon === 'Zap' ? Zap : icon === 'MousePointer2' ? MousePointer2 : icon === 'RefreshCcw' ? RefreshCcw : CheckCircle2;
   return (
-    <div className="glass p-10 rounded-[2.5rem] border border-black/10 dark:border-white/5 hover:border-orange-600 transition-all hover:-translate-y-2 group shadow-lg interactive-card cursor-none">
+    <div className="glass p-10 rounded-[2.5rem] border border-black/10 dark:border-white/5 hover:border-orange-600 transition-all hover:-translate-y-2 group shadow-lg interactive-card">
       <div className="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-[1.5rem] flex items-center justify-center mb-8 group-hover:bg-orange-600 transition-colors">
         <IconComponent className="w-8 h-8 text-orange-600 group-hover:text-white transition-colors" />
       </div>
@@ -612,7 +522,7 @@ const FeatureCard: React.FC<{ title: string, description: string, icon: string }
 };
 
 const ContactLink: React.FC<{ icon: React.ReactNode, label: string, value: string }> = ({ icon, label, value }) => (
-  <a href="#" className="flex flex-col items-center gap-4 group interactive-card cursor-none">
+  <a href="#" className="flex flex-col items-center gap-4 group interactive-card">
     <div className="w-20 h-20 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-3xl flex items-center justify-center group-hover:bg-orange-600 group-hover:scale-110 transition-all">
       <div className="text-slate-500 dark:text-gray-400 group-hover:text-white transition-colors">{React.cloneElement(icon as React.ReactElement<any>, { size: 32 })}</div>
     </div>

@@ -23,18 +23,6 @@
     body {
       font-family: 'Sora', sans-serif;
       transition: background-color 0.3s ease, color 0.3s ease;
-      /* Hide default cursor globally */
-      cursor: none !important;
-    }
-    
-    a, button, [role="button"], input, textarea, select, range, .interactive-card, .thumbnail-card {
-      cursor: none !important;
-    }
-
-    /* Prevent custom cursor from showing up on mobile/touch devices */
-    @media (hover: none) and (pointer: coarse) {
-      body { cursor: auto !important; }
-      #custom-cursor-root { display: none; }
     }
 
     /* Scrollbar Styling */
