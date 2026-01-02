@@ -1,7 +1,7 @@
 
 import { ThumbnailItem, Skill, Feature, Category } from './types';
 
-export const CATEGORIES: Category[] = ['All', 'Gaming', 'Vlog', 'Documentary', 'Shorts', 'Tech'];
+export const CATEGORIES: Category[] = ['All', 'Gaming', 'IRL', 'Documentary', 'Podcast', 'Tech'];
 
 export const THUMBNAILS: ThumbnailItem[] = [
   { 

@@ -1,5 +1,5 @@
 
-export type Category = 'All' | 'Gaming' | 'Vlog' | 'Documentary' | 'Shorts' | 'Tech';
+export type Category = 'All' | 'Gaming' | 'Vlog' | 'Documentary' | 'Shorts' | 'Tech' | 'IRL' | 'Podcast';
 
 export interface ThumbnailItem {
   id: string;

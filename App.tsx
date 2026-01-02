@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { 
   Zap, 
@@ -26,7 +27,8 @@ import {
   Loader2,
   Check,
   ShieldCheck,
-  Lock
+  Lock,
+  Eye
 } from 'lucide-react';
 import { CATEGORIES, THUMBNAILS, SKILLS, FEATURES, ABOUT_CONTENT } from './constants';
 import { Category, ThumbnailItem, Review } from './types';
@@ -127,6 +129,49 @@ const AnimatedRoles = () => {
   );
 };
 
+const ImageModal: React.FC<{ item: ThumbnailItem; onClose: () => void }> = ({ item, onClose }) => {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => {
+      document.body.style.overflow = 'auto';
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-10 animate-fade-in" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/95 backdrop-blur-xl" />
+      <button 
+        onClick={onClose} 
+        className="absolute top-6 right-6 z-[210] w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-orange-600 text-white transition-all hover:rotate-90"
+      >
+        <X className="w-6 h-6" />
+      </button>
+      <div 
+        className="relative z-10 w-full max-w-7xl aspect-video rounded-3xl overflow-hidden shadow-2xl scale-in group select-none"
+        onClick={e => e.stopPropagation()}
+      >
+        <img 
+          src={item.imageUrl} 
+          alt={item.title} 
+          className="w-full h-full object-contain bg-black" 
+        />
+        <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+             <div className="flex items-center gap-4 mb-2">
+                <span className="text-[#FF4D00] text-xs font-black uppercase tracking-[0.2em]">{item.category}</span>
+                {item.ctr && <span className="text-green-500 text-xs font-black uppercase tracking-[0.2em]">{item.ctr}</span>}
+             </div>
+             <h3 className="text-2xl md:text-4xl font-black text-white tracking-tight">{item.title}</h3>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isDark, setIsDark] = useState(true);
@@ -134,6 +179,7 @@ const App: React.FC = () => {
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [paymentStep, setPaymentStep] = useState<'checkout' | 'processing' | 'success'>('checkout');
   const [selectedCategory, setSelectedCategory] = useState<Category>('All');
+  const [selectedProject, setSelectedProject] = useState<ThumbnailItem | null>(null);
 
   // Order Form State
   const [quantity, setQuantity] = useState(1);
@@ -309,7 +355,7 @@ const App: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
           {(selectedCategory === 'All' ? THUMBNAILS : THUMBNAILS.filter(t => t.category === selectedCategory)).map(thumb => (
-            <ThumbnailCard key={thumb.id} item={thumb} />
+            <ThumbnailCard key={thumb.id} item={thumb} onClick={() => setSelectedProject(thumb)} />
           ))}
         </div>
       </section>
@@ -420,6 +466,11 @@ const App: React.FC = () => {
           </div>
         </div>
       </section>
+      
+      {/* IMAGE PREVIEW MODAL */}
+      {selectedProject && (
+        <ImageModal item={selectedProject} onClose={() => setSelectedProject(null)} />
+      )}
 
       {/* ORDER MODAL */}
       {showOrderForm && (
@@ -532,7 +583,7 @@ const App: React.FC = () => {
   );
 };
 
-const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => {
+const ThumbnailCard: React.FC<{ item: ThumbnailItem; onClick: () => void }> = ({ item, onClick }) => {
   const [imgSrc, setImgSrc] = useState(item.imageUrl);
   const [isLoaded, setIsLoaded] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -563,8 +614,18 @@ const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => {
   };
 
   return (
-    <div className="group relative rounded-[2rem] overflow-hidden bg-[#0a0a0a] dark:bg-[#0a0a0a] border border-white/5 shadow-2xl transition-all hover:scale-[1.02] cursor-pointer">
+    <div 
+      className="group relative rounded-[2rem] overflow-hidden bg-[#0a0a0a] dark:bg-[#0a0a0a] border border-white/5 shadow-2xl transition-all hover:scale-[1.02] cursor-pointer"
+      onClick={onClick}
+    >
       <div className="aspect-video relative overflow-hidden bg-zinc-900 border-b border-white/5">
+        {/* Hover Overlay with Eye Icon */}
+        <div className="absolute inset-0 z-20 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[2px]">
+          <div className="w-16 h-16 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center transform scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 delay-75 shadow-2xl">
+            <Eye className="w-7 h-7 text-white drop-shadow-lg" />
+          </div>
+        </div>
+
         {!isLoaded && (
           <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 z-10">
             <Loader2 className="w-8 h-8 text-orange-600 animate-spin opacity-50" />
@@ -576,7 +637,7 @@ const ThumbnailCard: React.FC<{ item: ThumbnailItem }> = ({ item }) => {
           src={imgSrc} 
           alt={item.title} 
           loading="eager"
-          className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:blur-[2px] group-hover:brightness-[0.4] ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={handleImageLoad}
           onError={handleImageError}
         />
