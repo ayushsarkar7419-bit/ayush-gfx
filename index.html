@@ -82,6 +82,15 @@
     .loading-exit {
       animation: fade-out-exit 0.8s forwards cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+    /* Floating Animation for Badges */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-float {
+      animation: float 4.5s ease-in-out infinite;
+    }
   </style>
 <script type="importmap">
 {

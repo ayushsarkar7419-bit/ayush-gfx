@@ -5,6 +5,13 @@ export const CATEGORIES: Category[] = ['All', 'Gaming', 'Vlog', 'Documentary', '
 
 export const THUMBNAILS: ThumbnailItem[] = [
   { 
+    id: 'g8', 
+    title: 'Viral Challenge Video', 
+    category: 'Gaming', 
+    imageUrl: 'https://iili.io/fhD7nCG.jpg', 
+    ctr: '21.5% CTR'
+  },
+  { 
     id: 'g7', 
     title: 'Minecraft Arctic Survival', 
     category: 'Gaming', 
@@ -15,42 +22,42 @@ export const THUMBNAILS: ThumbnailItem[] = [
     id: 'g1', 
     title: 'Gaming Live Stream', 
     category: 'Gaming', 
-    imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: 'https://iili.io/fhD7qjn.jpg',
     ctr: '12.8% CTR'
   },
   { 
     id: 'g2', 
     title: 'Champion Valorant', 
     category: 'Gaming', 
-    imageUrl: 'https://images.unsplash.com/photo-1614015859172-7369061d562b?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: 'https://iili.io/fhD7BQs.jpg',
     ctr: '15.2% CTR'
   },
   { 
     id: 'g3', 
     title: 'Gaming PC Setup', 
     category: 'Tech', 
-    imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: 'https://iili.io/fhDpRta.jpg',
     ctr: '11.5% CTR'
   },
   { 
     id: 'g4', 
     title: 'The Arctic Challenge', 
     category: 'Documentary', 
-    imageUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: 'https://iili.io/fhDpuAF.jpg',
     ctr: '14.1% CTR'
   },
   { 
     id: 'g5', 
     title: 'Neon Tokyo Vlog', 
     category: 'Vlog', 
-    imageUrl: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: 'https://iili.io/fhDp7oJ.jpg',
     ctr: '13.5% CTR'
   },
   { 
     id: 'g6', 
     title: 'Survival Horror Legend', 
     category: 'Gaming', 
-    imageUrl: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: 'https://iili.io/fhDpAwg.jpg',
     ctr: '16.8% CTR'
   },
 ];
