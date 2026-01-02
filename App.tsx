@@ -37,7 +37,7 @@ import { SectionHeading } from './components/SectionHeading';
 /**
  * BRAND LOGO SOURCE - Using the high-quality portrait provided by the user
  */
-const USER_PHOTO = "https://iili.io/fhex3MX.jpg";
+const USER_PHOTO = "https://res.cloudinary.com/dijsihxp0/image/upload/v1767391403/my_pfp.jpg_3_f8axfj.jpg";
 
 const LogoImage: React.FC<{ className?: string }> = ({ className = "w-full h-full object-cover" }) => {
   const [error, setError] = useState(false);
@@ -354,7 +354,10 @@ const App: React.FC = () => {
           ))}
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-          {(selectedCategory === 'All' ? THUMBNAILS : THUMBNAILS.filter(t => t.category === selectedCategory)).map(thumb => (
+          {(selectedCategory === 'All' 
+              ? THUMBNAILS.filter(t => !t.hiddenFromAll)
+              : THUMBNAILS.filter(t => t.category === selectedCategory)
+           ).map(thumb => (
             <ThumbnailCard key={thumb.id} item={thumb} onClick={() => setSelectedProject(thumb)} />
           ))}
         </div>
