@@ -1,7 +1,7 @@
 
 import { ThumbnailItem, Skill, Feature, Category } from './types';
 
-export const CATEGORIES: Category[] = ['All', 'Gaming', 'IRL', 'Documentary', 'Finance', 'Podcast', 'Tech'];
+export const CATEGORIES: Category[] = ['All', 'Gaming', 'IRL', 'Documentary', 'Finance', 'Podcast', 'Poster', 'Tech'];
 
 export const THUMBNAILS: ThumbnailItem[] = [
   { 
@@ -507,6 +507,144 @@ export const THUMBNAILS: ThumbnailItem[] = [
     category: 'Podcast',
     imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389727/underworld_podcasts_1_wwzylq.jpg',
     ctr: '21.0% CTR',
+    hiddenFromAll: true
+  },
+  // 8 New Tech Exclusive Thumbnails (Hidden from All)
+  {
+    id: 'tech-ex-1',
+    title: 'Grow 0 To 1K',
+    category: 'Tech',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389828/Grow_0_To_1k_followers_cwxpm2.jpg',
+    ctr: '19.2% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'tech-ex-2',
+    title: 'Big Billion Days',
+    category: 'Tech',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389826/big_billion_2_rvxxty.jpg',
+    ctr: '16.5% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'tech-ex-3',
+    title: '₹2.3 Lakh PC Build',
+    category: 'Tech',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389825/2.3_LAKH_PC_dv4hct.jpg',
+    ctr: '21.4% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'tech-ex-4',
+    title: 'ICT Strategy',
+    category: 'Tech',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389831/ICT_xuxgjg.jpg',
+    ctr: '22.1% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'tech-ex-5',
+    title: 'iQOO 13 Unboxing',
+    category: 'Tech',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389833/iqoo_13_zsbf2f.jpg',
+    ctr: '15.8% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'tech-ex-6',
+    title: 'Lava Agni 3',
+    category: 'Tech',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389835/lava_agni_3_go8yvi.jpg',
+    ctr: '17.3% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'tech-ex-7',
+    title: 'Nord 4 vs CE4',
+    category: 'Tech',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389837/OnePlus_Nord_4_vs_OnePlus_Nord_CE4_dd0qtg.jpg',
+    ctr: '18.9% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'tech-ex-8',
+    title: 'UC Phone 2',
+    category: 'Tech',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389839/uc_phone_2_c5fxkh.jpg',
+    ctr: '23.5% CTR',
+    hiddenFromAll: true
+  },
+  // 9 New Poster Exclusive Thumbnails (Hidden from All)
+  {
+    id: 'poster-ex-1',
+    title: 'Under Water Concept',
+    category: 'Poster',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389778/under_water_1_dbwyeg.jpg',
+    ctr: '18.5% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'poster-ex-2',
+    title: 'Shubh',
+    category: 'Poster',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389775/SUBH_ipijyn.jpg',
+    ctr: '20.1% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'poster-ex-3',
+    title: 'Untitled Art',
+    category: 'Poster',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389780/Untitled-2_i8obfb.jpg',
+    ctr: '16.9% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'poster-ex-4',
+    title: 'T-Shirt Design',
+    category: 'Poster',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389780/t_shirt_mhvlsy.jpg',
+    ctr: '22.4% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'poster-ex-5',
+    title: 'XX',
+    category: 'Poster',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389781/XX_szvrhu.jpg',
+    ctr: '19.8% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'poster-ex-6',
+    title: 'Creative Poster',
+    category: 'Poster',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389773/poter_ysyx33.jpg',
+    ctr: '17.5% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'poster-ex-7',
+    title: 'Graphic Poster',
+    category: 'Poster',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389772/poster_fhcfcn.jpg',
+    ctr: '21.2% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'poster-ex-8',
+    title: 'Modern Poster',
+    category: 'Poster',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389771/poster__2_tiftha.jpg',
+    ctr: '15.9% CTR',
+    hiddenFromAll: true
+  },
+  {
+    id: 'poster-ex-9',
+    title: 'Cinematic Poster',
+    category: 'Poster',
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389769/poster___bvue76.jpg',
+    ctr: '23.1% CTR',
     hiddenFromAll: true
   }
 ];

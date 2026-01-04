@@ -184,13 +184,20 @@ const App: React.FC = () => {
   // Order Form State
   const [quantity, setQuantity] = useState(1);
   const [selectedNiche, setSelectedNiche] = useState<string | null>(null);
+  const [customNiche, setCustomNiche] = useState('');
+  const [showAllNiches, setShowAllNiches] = useState(false);
   const [currency, setCurrency] = useState<'INR' | 'USD'>('INR');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [referenceLinks, setReferenceLinks] = useState('');
+  const [projectDetails, setProjectDetails] = useState('');
 
   const niches = [
     'GAMING (FPS)', 'GAMING (MC/ROBLOX)', 'ANIME', 'TECH', 
     'FINANCE', 'CRYPTO', 'BUSINESS', 'IRL/VLOG', 'DOCUMENTARY',
     'REACTION', 'LIFESTYLE', 'EDUCATIONAL', 'FITNESS', 'COOKING',
-    'TRAVEL', 'MUSIC', 'COMEDY', 'PODCAST'
+    'TRAVEL', 'MUSIC', 'COMEDY', 'PODCAST', 'OTHERS'
   ];
 
   const estimatedInvestment = useMemo(() => {
@@ -238,16 +245,63 @@ const App: React.FC = () => {
     setSelectedNiche(prev => prev === niche ? null : niche);
   };
 
-  const handleConfirmOrder = () => {
+  const handleConfirmOrder = async () => {
     setPaymentStep('processing');
-    setTimeout(() => {
-      setPaymentStep('success');
-    }, 3000);
+
+    // Prepare data for Web3Forms
+    const formData = {
+      access_key: "ffda2cc8-1d3b-4f55-b8b2-9768a3b52789", 
+      
+      subject: "New Thumbnail Order - Ayush GFX",
+      from_name: "Ayush GFX Portfolio",
+      
+      // Order Details
+      name: fullName,
+      email: email,
+      phone: phone,
+      niche: selectedNiche === 'OTHERS' ? `OTHERS: ${customNiche}` : (selectedNiche || 'Not Selected'),
+      quantity: quantity,
+      estimated_investment: `${currency === 'INR' ? '₹' : '$'}${estimatedInvestment.toLocaleString()}`,
+      currency: currency,
+      
+      // Additional Info
+      reference_links: referenceLinks,
+      project_details: projectDetails
+    };
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setPaymentStep('success');
+      } else {
+        console.error("Web3Forms Error:", result);
+        alert("Something went wrong while placing your order. Please try again or contact me directly.");
+        setPaymentStep('checkout');
+      }
+    } catch (error) {
+      console.error("Submission Error:", error);
+      alert("Network error. Please check your internet connection.");
+      setPaymentStep('checkout');
+    }
   };
 
   const closeModals = () => {
     setShowOrderForm(false);
     setPaymentStep('checkout');
+    setShowAllNiches(false);
+    setCustomNiche('');
+    setReferenceLinks('');
+    setProjectDetails('');
   };
 
   const toggleTheme = () => setIsDark(!isDark);
@@ -490,21 +544,101 @@ const App: React.FC = () => {
               <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
                 <div className="flex-1 p-8 md:p-12 space-y-8 overflow-y-auto custom-scrollbar-niche">
                   <h3 className="text-3xl font-black tracking-tighter dark:text-white flex items-center gap-3">PROJECT BRIEF <Sparkles className="w-6 h-6 text-orange-500" /></h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Full Name</p>
+                      <input 
+                        type="text" 
+                        placeholder="e.g. MrBeast" 
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        className="w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white border border-transparent focus:border-orange-600/30 transition-all" 
+                      />
+                    </div>
+                    <div className="space-y-4">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Email Address</p>
+                      <input 
+                        type="email" 
+                        placeholder="contact@channel.com" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white border border-transparent focus:border-orange-600/30 transition-all" 
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Phone / WhatsApp (Mandatory)</p>
+                    <input 
+                      type="tel" 
+                      placeholder="+91 00000 00000" 
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white border border-transparent focus:border-orange-600/30 transition-all" 
+                    />
+                  </div>
+
                   <div className="space-y-4">
                     <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Select Your Niche</p>
-                    <div className="flex flex-wrap gap-2">
-                      {niches.slice(0, 10).map(niche => (
-                        <button key={niche} onClick={() => handleNicheSelect(niche)} className={`px-4 py-2.5 rounded-xl text-[10px] font-bold border transition-all ${selectedNiche === niche ? 'bg-orange-600 border-orange-600 text-white' : 'bg-black/5 dark:bg-white/5 border-transparent dark:text-zinc-400 hover:border-orange-500/30'}`}>{niche}</button>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {niches.slice(0, showAllNiches ? undefined : 8).map(niche => (
+                        <button 
+                            key={niche} 
+                            onClick={() => handleNicheSelect(niche)} 
+                            className={`
+                              w-full py-4 rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all
+                              ${selectedNiche === niche 
+                                ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/20 scale-[1.02]' 
+                                : 'bg-[#9ca3af] text-white hover:bg-[#71717a] hover:scale-[1.02]'}
+                            `}
+                        >
+                            {niche}
+                        </button>
                       ))}
                     </div>
+                    
+                    {!showAllNiches && (
+                        <button 
+                            onClick={() => setShowAllNiches(true)}
+                            className="mt-4 px-8 py-4 rounded-2xl border border-dashed border-red-500/30 bg-red-500/5 text-red-500 hover:bg-red-500/10 hover:border-red-500/50 transition-all text-[10px] font-black uppercase tracking-widest w-full sm:w-auto"
+                        >
+                            More +
+                        </button>
+                    )}
+
+                    {selectedNiche === 'OTHERS' && (
+                      <div className="mt-3 animate-fade-in">
+                        <input
+                          type="text"
+                          placeholder="Please specify your niche..."
+                          value={customNiche}
+                          onChange={(e) => setCustomNiche(e.target.value)}
+                          className="w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white border border-transparent focus:border-orange-600/30 transition-all"
+                          autoFocus
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-4">
                     <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Reference Links</p>
-                    <input type="text" placeholder="https://youtube.com/..." className="w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white border border-transparent focus:border-orange-600/30 transition-all" />
+                    <input 
+                      type="text" 
+                      placeholder="https://youtube.com/..." 
+                      value={referenceLinks}
+                      onChange={(e) => setReferenceLinks(e.target.value)}
+                      className="w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white border border-transparent focus:border-orange-600/30 transition-all" 
+                    />
                   </div>
                   <div className="space-y-4">
                     <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Project Details & Note</p>
-                    <textarea rows={4} placeholder="Anything else you want to share..." className="w-full bg-black/5 dark:bg-white/5 rounded-2xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white resize-none border border-transparent focus:border-orange-600/30 transition-all" />
+                    <textarea 
+                      rows={4} 
+                      placeholder="Anything else you want to share..." 
+                      value={projectDetails}
+                      onChange={(e) => setProjectDetails(e.target.value)}
+                      className="w-full bg-black/5 dark:bg-white/5 rounded-2xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white resize-none border border-transparent focus:border-orange-600/30 transition-all" 
+                    />
                   </div>
                   <div className="pt-4 flex items-center gap-3 text-zinc-500 text-[10px] font-bold uppercase tracking-wider">
                     <ShieldCheck className="w-4 h-4 text-green-500" /> Encrypted Payment & Secured Checkout
@@ -544,7 +678,7 @@ const App: React.FC = () => {
                   <div className="space-y-4 mt-8">
                     <button onClick={handleConfirmOrder} className="group relative w-full py-6 bg-gradient-to-r from-orange-600 to-red-600 hover:scale-[1.02] text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-orange-600/20 active:scale-95 overflow-hidden">
                       <span className="relative z-10 flex items-center justify-center gap-3">
-                        <CreditCard className="w-4 h-4" /> CONFIRM & PAY
+                        <CreditCard className="w-4 h-4" /> PLACE ORDER
                       </span>
                       <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                     </button>
