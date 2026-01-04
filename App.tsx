@@ -184,7 +184,7 @@ const App: React.FC = () => {
   // Order Form State
   const [quantity, setQuantity] = useState(1);
   const [selectedNiche, setSelectedNiche] = useState<string | null>(null);
-  const pricePerThumb = 1500;
+  const [currency, setCurrency] = useState<'INR' | 'USD'>('INR');
 
   const niches = [
     'GAMING (FPS)', 'GAMING (MC/ROBLOX)', 'ANIME', 'TECH', 
@@ -194,8 +194,9 @@ const App: React.FC = () => {
   ];
 
   const estimatedInvestment = useMemo(() => {
-    return pricePerThumb * quantity;
-  }, [quantity]);
+    const price = currency === 'INR' ? 1500 : 20;
+    return price * quantity;
+  }, [quantity, currency]);
 
   // Navbar scroll detection
   useEffect(() => {
@@ -502,7 +503,7 @@ const App: React.FC = () => {
                     <input type="text" placeholder="https://youtube.com/..." className="w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white border border-transparent focus:border-orange-600/30 transition-all" />
                   </div>
                   <div className="space-y-4">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Project Notes</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Project Details & Note</p>
                     <textarea rows={4} placeholder="Anything else you want to share..." className="w-full bg-black/5 dark:bg-white/5 rounded-2xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white resize-none border border-transparent focus:border-orange-600/30 transition-all" />
                   </div>
                   <div className="pt-4 flex items-center gap-3 text-zinc-500 text-[10px] font-bold uppercase tracking-wider">
@@ -511,7 +512,23 @@ const App: React.FC = () => {
                 </div>
                 <div className="md:w-[320px] bg-slate-50 dark:bg-zinc-950 p-8 md:p-12 border-l border-black/5 dark:border-white/5 flex flex-col justify-between">
                   <div>
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-8">Investment Breakdown</h4>
+                    <div className="flex items-center justify-between mb-8">
+                        <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Investment Breakdown</h4>
+                        <div className="flex items-center gap-1 bg-black/5 dark:bg-white/5 p-1.5 rounded-xl">
+                             <button 
+                                onClick={() => setCurrency('INR')}
+                                className={`px-4 py-2 text-xs font-black rounded-lg transition-all ${currency === 'INR' ? 'bg-white dark:bg-zinc-800 text-black dark:text-white shadow-sm' : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'}`}
+                             >
+                                INR
+                             </button>
+                             <button 
+                                onClick={() => setCurrency('USD')}
+                                className={`px-4 py-2 text-xs font-black rounded-lg transition-all ${currency === 'USD' ? 'bg-white dark:bg-zinc-800 text-black dark:text-white shadow-sm' : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300'}`}
+                             >
+                                USD
+                             </button>
+                        </div>
+                    </div>
                     <div className="space-y-6">
                       <div className="flex justify-between items-end">
                         <span className="text-xs font-bold dark:text-zinc-400">Thumbnails</span>
@@ -521,7 +538,7 @@ const App: React.FC = () => {
                     </div>
                     <div className="mt-12 space-y-2 text-center bg-black/5 dark:bg-white/5 p-6 rounded-2xl border border-white/5">
                       <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Total Investment</p>
-                      <p className="text-5xl font-black tracking-tighter dark:text-white">₹{estimatedInvestment.toLocaleString()}</p>
+                      <p className="text-5xl font-black tracking-tighter dark:text-white">{currency === 'INR' ? '₹' : '$'}{estimatedInvestment.toLocaleString()}</p>
                     </div>
                   </div>
                   <div className="space-y-4 mt-8">
