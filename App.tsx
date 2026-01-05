@@ -28,7 +28,8 @@ import {
   Check,
   ShieldCheck,
   Lock,
-  Eye
+  Eye,
+  Tag
 } from 'lucide-react';
 import { CATEGORIES, THUMBNAILS, SKILLS, FEATURES, ABOUT_CONTENT } from './constants';
 import { Category, ThumbnailItem, Review } from './types';
@@ -105,6 +106,21 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
     </div>
   );
 };
+
+const ValidationPopup: React.FC<{ message?: string }> = ({ message = "Please fill out this field." }) => (
+  <div className="absolute top-full left-0 mt-2 z-50 animate-fade-in origin-top-left pointer-events-none">
+    <div className="relative bg-white text-slate-800 text-[12px] font-medium px-3 py-2 rounded shadow-lg border border-slate-200 flex items-center gap-2.5 min-w-[180px]">
+       {/* Arrow */}
+       <div className="absolute -top-1.5 left-4 w-3 h-3 bg-white border-t border-l border-slate-200 transform rotate-45"></div>
+       {/* Icon */}
+       <div className="w-5 h-5 bg-orange-500 rounded-[3px] flex items-center justify-center shrink-0">
+          <span className="text-white font-bold text-sm leading-none font-sans">!</span>
+       </div>
+       {/* Text */}
+       <span>{message}</span>
+    </div>
+  </div>
+);
 
 const AnimatedRoles = () => {
   const roles = ["Thumbnail Designer", "Thumbnail Strategist", "Attention Expert"];
@@ -192,6 +208,19 @@ const App: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [referenceLinks, setReferenceLinks] = useState('');
   const [projectDetails, setProjectDetails] = useState('');
+  
+  // Coupon State
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedDiscount, setAppliedDiscount] = useState(0);
+  const [couponError, setCouponError] = useState(false);
+
+  // Validation State
+  const [formErrors, setFormErrors] = useState<{
+    fullName?: boolean;
+    email?: boolean;
+    niche?: boolean;
+    projectDetails?: boolean;
+  }>({});
 
   const niches = [
     'GAMING (FPS)', 'GAMING (MC/ROBLOX)', 'ANIME', 'TECH', 
@@ -202,8 +231,34 @@ const App: React.FC = () => {
 
   const estimatedInvestment = useMemo(() => {
     const price = currency === 'INR' ? 1500 : 20;
-    return price * quantity;
-  }, [quantity, currency]);
+    const total = price * quantity;
+    return appliedDiscount > 0 ? total - (total * appliedDiscount) : total;
+  }, [quantity, currency, appliedDiscount]);
+
+  const handleApplyCoupon = () => {
+    const code = couponCode.toUpperCase();
+    if (code === 'AYUSH20') {
+        setAppliedDiscount(0.20);
+        setCouponError(false);
+    } else if (code === 'AYUSH18') {
+        setAppliedDiscount(0.28);
+        setCouponError(false);
+    } else {
+        setCouponError(true);
+        setTimeout(() => setCouponError(false), 2000);
+    }
+  };
+
+  // Check if all required fields are filled for button fade logic
+  const isFormFilled = useMemo(() => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return (
+      fullName.trim().length > 0 && 
+      emailRegex.test(email.trim()) && 
+      (selectedNiche !== null && (selectedNiche !== 'OTHERS' || customNiche.trim().length > 0)) && 
+      projectDetails.trim().length > 0
+    );
+  }, [fullName, email, selectedNiche, customNiche, projectDetails]);
 
   // Navbar scroll detection
   useEffect(() => {
@@ -243,9 +298,42 @@ const App: React.FC = () => {
 
   const handleNicheSelect = (niche: string) => {
     setSelectedNiche(prev => prev === niche ? null : niche);
+    if (formErrors.niche) {
+        setFormErrors(prev => ({ ...prev, niche: false }));
+    }
   };
 
   const handleConfirmOrder = async () => {
+    // Validation Logic
+    const newErrors: typeof formErrors = {};
+    let hasError = false;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!fullName.trim()) {
+        newErrors.fullName = true;
+        hasError = true;
+    }
+    if (!emailRegex.test(email.trim())) {
+        newErrors.email = true;
+        hasError = true;
+    }
+    if (!selectedNiche) {
+        newErrors.niche = true;
+        hasError = true;
+    } else if (selectedNiche === 'OTHERS' && !customNiche.trim()) {
+        newErrors.niche = true;
+        hasError = true;
+    }
+    if (!projectDetails.trim()) {
+        newErrors.projectDetails = true;
+        hasError = true;
+    }
+
+    if (hasError) {
+        setFormErrors(newErrors);
+        return;
+    }
+
     setPaymentStep('processing');
 
     // Prepare data for Web3Forms
@@ -262,6 +350,7 @@ const App: React.FC = () => {
       niche: selectedNiche === 'OTHERS' ? `OTHERS: ${customNiche}` : (selectedNiche || 'Not Selected'),
       quantity: quantity,
       estimated_investment: `${currency === 'INR' ? '₹' : '$'}${estimatedInvestment.toLocaleString()}`,
+      coupon_code: appliedDiscount > 0 ? couponCode : 'None',
       currency: currency,
       
       // Additional Info
@@ -302,6 +391,10 @@ const App: React.FC = () => {
     setCustomNiche('');
     setReferenceLinks('');
     setProjectDetails('');
+    setFormErrors({});
+    setCouponCode('');
+    setAppliedDiscount(0);
+    setCouponError(false);
   };
 
   const toggleTheme = () => setIsDark(!isDark);
@@ -542,29 +635,45 @@ const App: React.FC = () => {
             )}
             {paymentStep === 'checkout' && (
               <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
-                <div className="flex-1 p-8 md:p-12 space-y-8 overflow-y-auto custom-scrollbar-niche">
+                <div className="flex-1 p-8 md:p-12 space-y-8 overflow-y-auto custom-scrollbar-niche pb-8">
                   <h3 className="text-3xl font-black tracking-tighter dark:text-white flex items-center gap-3">PROJECT BRIEF <Sparkles className="w-6 h-6 text-orange-500" /></h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Full Name</p>
-                      <input 
-                        type="text" 
-                        placeholder="e.g. MrBeast" 
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className="w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white border border-transparent focus:border-orange-600/30 transition-all" 
-                      />
+                      <p className={`text-[10px] font-black uppercase tracking-widest ${formErrors.fullName ? 'text-red-500' : 'text-zinc-500'}`}>
+                        Full Name
+                      </p>
+                      <div className="relative">
+                        <input 
+                            type="text" 
+                            placeholder="e.g. MrBeast" 
+                            value={fullName}
+                            onChange={(e) => {
+                                setFullName(e.target.value);
+                                if(formErrors.fullName) setFormErrors(prev => ({...prev, fullName: false}));
+                            }}
+                            className={`w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 dark:text-white border border-transparent transition-all ${formErrors.fullName ? 'ring-red-500/50 focus:border-red-500/50' : 'ring-orange-600/20 focus:border-orange-600/30'}`}
+                        />
+                        {formErrors.fullName && <ValidationPopup />}
+                      </div>
                     </div>
                     <div className="space-y-4">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Email Address</p>
-                      <input 
-                        type="email" 
-                        placeholder="contact@channel.com" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white border border-transparent focus:border-orange-600/30 transition-all" 
-                      />
+                      <p className={`text-[10px] font-black uppercase tracking-widest ${formErrors.email ? 'text-red-500' : 'text-zinc-500'}`}>
+                        Email Address
+                      </p>
+                      <div className="relative">
+                        <input 
+                            type="email" 
+                            placeholder="contact@channel.com" 
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                if(formErrors.email) setFormErrors(prev => ({...prev, email: false}));
+                            }}
+                            className={`w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 dark:text-white border border-transparent transition-all ${formErrors.email ? 'ring-red-500/50 focus:border-red-500/50' : 'ring-orange-600/20 focus:border-orange-600/30'}`}
+                        />
+                        {formErrors.email && <ValidationPopup />}
+                      </div>
                     </div>
                   </div>
 
@@ -580,22 +689,27 @@ const App: React.FC = () => {
                   </div>
 
                   <div className="space-y-4">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Select Your Niche</p>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {niches.slice(0, showAllNiches ? undefined : 8).map(niche => (
-                        <button 
-                            key={niche} 
-                            onClick={() => handleNicheSelect(niche)} 
-                            className={`
-                              w-full py-4 rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all
-                              ${selectedNiche === niche 
-                                ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/20 scale-[1.02]' 
-                                : 'bg-[#9ca3af] text-white hover:bg-[#71717a] hover:scale-[1.02]'}
-                            `}
-                        >
-                            {niche}
-                        </button>
-                      ))}
+                    <p className={`text-[10px] font-black uppercase tracking-widest ${formErrors.niche ? 'text-red-500' : 'text-zinc-500'}`}>
+                        Select Your Niche
+                    </p>
+                    <div className="relative">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {niches.slice(0, showAllNiches ? undefined : 8).map(niche => (
+                            <button 
+                                key={niche} 
+                                onClick={() => handleNicheSelect(niche)} 
+                                className={`
+                                w-full py-4 rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all
+                                ${selectedNiche === niche 
+                                    ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/20 scale-[1.02]' 
+                                    : 'bg-[#9ca3af] text-white hover:bg-[#71717a] hover:scale-[1.02]'}
+                                `}
+                            >
+                                {niche}
+                            </button>
+                        ))}
+                        </div>
+                        {formErrors.niche && <ValidationPopup message="Please select an option." />}
                     </div>
                     
                     {!showAllNiches && (
@@ -608,7 +722,7 @@ const App: React.FC = () => {
                     )}
 
                     {selectedNiche === 'OTHERS' && (
-                      <div className="mt-3 animate-fade-in">
+                      <div className="mt-3 animate-fade-in relative">
                         <input
                           type="text"
                           placeholder="Please specify your niche..."
@@ -617,6 +731,7 @@ const App: React.FC = () => {
                           className="w-full bg-black/5 dark:bg-white/5 rounded-xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white border border-transparent focus:border-orange-600/30 transition-all"
                           autoFocus
                         />
+                         {/* No separate popup for custom niche input if main niche error handles it, but typically user clicks generic 'OTHERS' then types. Validation logic covers both. */}
                       </div>
                     )}
                   </div>
@@ -631,14 +746,22 @@ const App: React.FC = () => {
                     />
                   </div>
                   <div className="space-y-4">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Project Details & Note</p>
-                    <textarea 
-                      rows={4} 
-                      placeholder="Anything else you want to share..." 
-                      value={projectDetails}
-                      onChange={(e) => setProjectDetails(e.target.value)}
-                      className="w-full bg-black/5 dark:bg-white/5 rounded-2xl px-6 py-4 outline-none focus:ring-2 ring-orange-600/20 dark:text-white resize-none border border-transparent focus:border-orange-600/30 transition-all" 
-                    />
+                    <p className={`text-[10px] font-black uppercase tracking-widest ${formErrors.projectDetails ? 'text-red-500' : 'text-zinc-500'}`}>
+                        Project Details & Note
+                    </p>
+                    <div className="relative">
+                        <textarea 
+                        rows={4} 
+                        placeholder="Anything else you want to share..." 
+                        value={projectDetails}
+                        onChange={(e) => {
+                            setProjectDetails(e.target.value);
+                            if(formErrors.projectDetails) setFormErrors(prev => ({...prev, projectDetails: false}));
+                        }}
+                        className={`w-full bg-black/5 dark:bg-white/5 rounded-2xl px-6 py-4 outline-none focus:ring-2 dark:text-white resize-none border border-transparent transition-all ${formErrors.projectDetails ? 'ring-red-500/50 focus:border-red-500/50' : 'ring-orange-600/20 focus:border-orange-600/30'}`}
+                        />
+                        {formErrors.projectDetails && <ValidationPopup />}
+                    </div>
                   </div>
                   <div className="pt-4 flex items-center gap-3 text-zinc-500 text-[10px] font-bold uppercase tracking-wider">
                     <ShieldCheck className="w-4 h-4 text-green-500" /> Encrypted Payment & Secured Checkout
@@ -674,9 +797,49 @@ const App: React.FC = () => {
                       <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Total Investment</p>
                       <p className="text-5xl font-black tracking-tighter dark:text-white">{currency === 'INR' ? '₹' : '$'}{estimatedInvestment.toLocaleString()}</p>
                     </div>
+
+                    {/* Coupon Code Section */}
+                    <div className="mt-4 space-y-2">
+                        {appliedDiscount > 0 ? (
+                            <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 flex justify-between items-center animate-fade-in">
+                                 <div className="flex items-center gap-2">
+                                    <Tag className="w-3 h-3 text-green-500" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-green-500">{appliedDiscount * 100}% OFF APPLIED</span>
+                                 </div>
+                                 <button onClick={() => {setAppliedDiscount(0); setCouponCode('');}} className="p-1 hover:bg-green-500/20 rounded-full transition-colors text-green-500">
+                                    <X className="w-3 h-3" />
+                                 </button>
+                            </div>
+                        ) : (
+                            <div className="relative">
+                                <div className="flex gap-2">
+                                    <input 
+                                        type="text" 
+                                        placeholder="HAVE A COUPON?"
+                                        value={couponCode}
+                                        onChange={(e) => {
+                                            setCouponCode(e.target.value);
+                                            setCouponError(false);
+                                        }}
+                                        className={`flex-1 bg-black/5 dark:bg-white/5 rounded-xl px-4 py-3 text-[10px] font-bold outline-none focus:ring-2 dark:text-white border uppercase tracking-wider transition-all ${couponError ? 'border-red-500/50 focus:ring-red-500/20' : 'border-transparent ring-orange-600/20 focus:border-orange-600/30'}`}
+                                    />
+                                    <button 
+                                        onClick={handleApplyCoupon}
+                                        disabled={!couponCode}
+                                        className="bg-black/10 dark:bg-white/10 hover:bg-orange-600 hover:text-white disabled:opacity-50 disabled:hover:bg-black/10 px-4 rounded-xl transition-all flex items-center justify-center"
+                                    >
+                                        <ArrowRight className="w-4 h-4" />
+                                    </button>
+                                </div>
+                                 {couponError && (
+                                    <p className="absolute -bottom-5 left-2 text-[9px] font-bold text-red-500 uppercase tracking-wider animate-fade-in">Invalid Code</p>
+                                )}
+                            </div>
+                        )}
+                    </div>
                   </div>
                   <div className="space-y-4 mt-8">
-                    <button onClick={handleConfirmOrder} className="group relative w-full py-6 bg-gradient-to-r from-orange-600 to-red-600 hover:scale-[1.02] text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-orange-600/20 active:scale-95 overflow-hidden">
+                    <button onClick={handleConfirmOrder} className={`group relative w-full py-6 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-orange-600/20 overflow-hidden ${!isFormFilled ? 'opacity-50 grayscale' : 'hover:scale-[1.02] active:scale-95'}`}>
                       <span className="relative z-10 flex items-center justify-center gap-3">
                         <CreditCard className="w-4 h-4" /> PLACE ORDER
                       </span>
@@ -708,7 +871,7 @@ const App: React.FC = () => {
                     <Check className="w-12 h-12 text-white stroke-[3]" />
                   </div>
                   <h3 className="text-5xl font-black text-white tracking-tighter mb-4">ORDER PLACED!</h3>
-                  <p className="text-lg text-zinc-400 font-medium max-w-sm mb-12">Payment successful. Ayush has been notified and will contact you via email within the next <span className="text-white font-bold">2 hours</span>.</p>
+                  <p className="text-lg text-zinc-400 font-medium max-w-sm mb-12">Ayush has been notified and will contact you via email within the next <span className="text-white font-bold">24 hours</span>.</p>
                   <button onClick={closeModals} className="px-12 py-5 bg-white text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl active:scale-95">CONTINUE BROWSING</button>
                 </div>
               </div>
@@ -769,7 +932,7 @@ const ThumbnailCard: React.FC<{ item: ThumbnailItem; onClick: () => void }> = ({
 
   return (
     <div 
-      className="group relative rounded-[2rem] overflow-hidden bg-[#0a0a0a] dark:bg-[#0a0a0a] border border-white/5 shadow-2xl transition-all hover:scale-[1.02] cursor-pointer"
+      className="group relative rounded-[2rem] overflow-hidden bg-[#0a0a0a] dark:bg-[#0a0a0a] border border-white/5 shadow-2xl transition-all hover:scale-[1.02] active:scale-[0.98] active:opacity-80 cursor-pointer"
       onClick={onClick}
     >
       <div className="aspect-video relative overflow-hidden bg-zinc-900 border-b border-white/5">
