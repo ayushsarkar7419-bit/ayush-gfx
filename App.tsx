@@ -36,9 +36,9 @@ import { Category, ThumbnailItem, Review } from './types';
 import { SectionHeading } from './components/SectionHeading';
 
 /**
- * BRAND LOGO SOURCE - Using the high-quality portrait provided by the user
+ * BRAND LOGO SOURCE - Using the animated GIF provided by the user
  */
-const USER_PHOTO = "https://res.cloudinary.com/dijsihxp0/image/upload/v1767391403/my_pfp.jpg_3_f8axfj.jpg";
+const USER_PHOTO = "https://res.cloudinary.com/dijsihxp0/image/upload/v1767634879/485535190016201_tpkkf2.gif";
 
 const LogoImage: React.FC<{ className?: string }> = ({ className = "w-full h-full object-cover" }) => {
   const [error, setError] = useState(false);
