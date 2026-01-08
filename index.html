@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ayush GFX | Premium Thumbnail Design</title>
+  <title>Professional YouTube Thumbnail Designer | High CTR Thumbnails</title>
+  <meta name="description" content="I design scroll-stopping YouTube thumbnails that boost CTR, increase views, and grow your channel using viewer psychology and expressive design.">
   <link rel="icon" type="image/gif" href="https://res.cloudinary.com/dijsihxp0/image/upload/v1767634879/485535190016201_tpkkf2.gif">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
@@ -108,6 +108,19 @@
     }
     .scale-in {
       animation: scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Marquee Animation */
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      animation: marquee 80s linear infinite;
+      will-change: transform;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
     }
   </style>
 <script type="importmap">

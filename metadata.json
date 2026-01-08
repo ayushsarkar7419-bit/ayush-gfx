@@ -1,5 +1,29 @@
 {
-  "name": "Cinematic Thumbnail Portfolio",
-  "description": "A premium, dark-themed portfolio website for a YouTube thumbnail designer featuring cinematic glow effects, responsive grid, and interactive animations.",
+  "name": "Professional YouTube Thumbnail Designer | High CTR Thumbnails",
+  "description": "I design scroll-stopping YouTube thumbnails that boost CTR, increase views, and grow your channel using viewer psychology and expressive design.",
+  "keywords": [
+    "YouTube thumbnail designer",
+    "professional thumbnail designer",
+    "high CTR thumbnails",
+    "clickable YouTube thumbnails",
+    "YouTube CTR boost",
+    "thumbnail design for YouTubers",
+    "gaming thumbnail designer",
+    "MrBeast style thumbnails",
+    "YouTube thumbnail expert",
+    "scroll stopping thumbnails",
+    "YouTube thumbnail services",
+    "custom YouTube thumbnails",
+    "eye catching thumbnails",
+    "thumbnail design portfolio",
+    "YouTube growth thumbnails"
+  ],
+  "category": "Design Services",
+  "theme": "YouTube Thumbnail Design",
+  "targetAudience": "YouTubers, Content Creators, Gamers, business, startup",
+  "author": "Ayush GFX",
+  "robots": "index, follow",
+  "language": "en",
+  "viewport": "width=device-width, initial-scale=1.0",
   "requestFramePermissions": []
 }
