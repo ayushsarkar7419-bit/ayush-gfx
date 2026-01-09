@@ -1414,7 +1414,7 @@ const App: React.FC = () => {
                         }`}
                         disabled={!isFormFilled}
                       >
-                         Confirm Order
+                         Place Order
                       </button>
                    </div>
                  </>
