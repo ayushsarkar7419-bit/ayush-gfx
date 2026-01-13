@@ -230,7 +230,7 @@ export const THUMBNAILS: ThumbnailItem[] = [
     id: 'irl-ex-7', 
     title: '24 Hours in Jungle', 
     category: 'IRL', 
-    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389337/24_hours_in_jungle_rpg968.jpg', 
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1768304590/football_lgemh8.jpg', 
     ctr: '15.6% CTR',
     hiddenFromAll: true
   },
