@@ -13,6 +13,7 @@ export const THUMBNAILS: ThumbnailItem[] = [
   },
   { 
     id: 'g7', 
+<<<<<<< HEAD
     title: 'Minecraft Arctic Survival', 
     category: 'Gaming', 
     // -------------------------------------------------------------------------
@@ -20,6 +21,11 @@ export const THUMBNAILS: ThumbnailItem[] = [
     // Example for local file in public folder: '/my-minecraft-thumbnail.jpg'
     // -------------------------------------------------------------------------
     imageUrl: 'https://ibb.co/WW9sh6Vz', 
+=======
+    title: 'SURVIVE  THE WILD!', 
+    category: 'IRL', 
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389337/harsh_1_k4xujv.jpg', 
+>>>>>>> b397dfaf65ca48bde42757844e153fdce801fe64
     ctr: '18.4% CTR'
   },
   { 
