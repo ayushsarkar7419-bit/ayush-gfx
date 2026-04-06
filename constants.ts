@@ -95,6 +95,20 @@ export const THUMBNAILS: ThumbnailItem[] = [
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459158/techno_thumbnail_bkpe24.jpg',
     ctr: '10.9% CTR'
   },
+    { 
+    id: 'new-4', 
+    title: '2k Per Clients', 
+    category: 'Finance', 
+    imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459293/How_to_Sign_High_xmgoj4.jpg',
+    ctr: '8.9% CTR'
+  },
+    { 
+    id: 'new-4', 
+    title: 'Rocket league', 
+    category: 'Gaming', 
+    imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459098/rocket_leauge_fbmnxc.jpg',
+    ctr: '10.9% CTR'
+  },
   // 11 New Gaming Exclusive Thumbnails (Hidden from All)
   { 
     id: 'g-ex-2', 
