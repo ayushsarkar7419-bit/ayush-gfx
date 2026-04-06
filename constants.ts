@@ -112,21 +112,21 @@ export const THUMBNAILS: ThumbnailItem[] = [
   { 
     id: 'new-4', 
     title: 'gay or straight', 
-    category: 'IRL', 
+    category: 'Irl', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459155/gay_or_straight_cmcbs8.jpg',
     ctr: '10.9% CTR'
   },
   { 
     id: 'new-4', 
     title: 'squid Game', 
-    category: 'IRL', 
+    category: 'Irl', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459157/squid_game.jpg_1_dwa528.jpg',
     ctr: '10.9% CTR'
   },
   { 
     id: 'new-4', 
     title: 'Editing is so boring', 
-    category: 'TECH', 
+    category: 'Tech', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459375/Editing_is_so_boring.jpg_2_g5pqgw.jpg',
     ctr: '10.9% CTR'
   },
