@@ -91,7 +91,7 @@ export const THUMBNAILS: ThumbnailItem[] = [
   { 
     id: 'new-4', 
     title: '', 
-    category: 'gamming', 
+    category: 'gaming', 
     imageUrl: 'https://www.behance.net/gallery/247075671/Yt-Thumbnail/modules/1428644047',
     ctr: '12.9% CTR'
   },
