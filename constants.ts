@@ -99,14 +99,14 @@ export const THUMBNAILS: ThumbnailItem[] = [
     ctr: '12.9% CTR'
   },
   { 
-    id: 'new-4', 
+    id: 'new-5', 
     title: 'No Brakes. Just Skill 💀', 
     category: 'Tech', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459158/techno_thumbnail_bkpe24.jpg',
     ctr: '10.9% CTR'
   },
   { 
-    id: 'new-4', 
+    id: 'new-6', 
     title: '2k Per Clients', 
     category: 'Finance', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459293/How_to_Sign_High_xmgoj4.jpg',
@@ -120,35 +120,35 @@ export const THUMBNAILS: ThumbnailItem[] = [
     ctr: '10.9% CTR'
   },
   { 
-    id: 'new-4', 
+    id: 'new-7', 
     title: 'gay or straight', 
     category: 'IRL', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459155/gay_or_straight_cmcbs8.jpg',
     ctr: '10.9% CTR'
   },
   { 
-    id: 'new-4', 
+    id: 'new-8', 
     title: 'squid Game', 
     category: 'IRL', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459157/squid_game.jpg_1_dwa528.jpg',
     ctr: '10.9% CTR'
   },
   { 
-    id: 'new-4', 
+    id: 'new-9', 
     title: 'Editing is so boring', 
     category: 'TECH', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459375/Editing_is_so_boring.jpg_2_g5pqgw.jpg',
     ctr: '10.9% CTR'
   },
   { 
-    id: 'new-4', 
+    id: 'new-10', 
     title: 'JJK', 
     category: 'Gaming', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459098/jjk_ak9emy.jpg',
     ctr: '10.9% CTR'
   },
   { 
-    id: 'new-4', 
+    id: 'new-11', 
     title: 'Open ai Kill', 
     category: 'TECH', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459331/OpenAI_Just_Killed_Their_AI_Companion_Model_byrlmg.jpg',
