@@ -88,6 +88,34 @@ export const THUMBNAILS: ThumbnailItem[] = [
     imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389830/How_to_Build_ai_Agent_iitkqa.jpg',
     ctr: '12.9% CTR'
   },
+  { 
+    id: 'new-4', 
+    title: 'Ai Agent', 
+    category: 'Tech', 
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389830/How_to_Build_ai_Agent_iitkqa.jpg',
+    ctr: '12.9% CTR'
+  },
+  { 
+    id: 'new-4', 
+    title: 'Ai Agent', 
+    category: 'Tech', 
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389830/How_to_Build_ai_Agent_iitkqa.jpg',
+    ctr: '12.9% CTR'
+  },
+  { 
+    id: 'new-4', 
+    title: 'Ai Agent', 
+    category: 'Tech', 
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389830/How_to_Build_ai_Agent_iitkqa.jpg',
+    ctr: '12.9% CTR'
+  },
+  { 
+    id: 'new-4', 
+    title: 'Ai Agent', 
+    category: 'Tech', 
+    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389830/How_to_Build_ai_Agent_iitkqa.jpg',
+    ctr: '12.9% CTR'
+  },
   // 11 New Gaming Exclusive Thumbnails (Hidden from All)
   { 
     id: 'g-ex-2', 
