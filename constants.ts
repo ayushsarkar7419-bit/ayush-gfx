@@ -92,7 +92,7 @@ export const THUMBNAILS: ThumbnailItem[] = [
     id: 'new-4', 
     title: 'No Brakes. Just Skill 💀', 
     category: 'gaming', 
-    imageUrl: 'https://www.behance.net/gallery/247075671/Yt-Thumbnail/modules/1428644047',
+    imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459158/techno_thumbnail_bkpe24.jpg',
     ctr: '12.9% CTR'
   },
   { 
