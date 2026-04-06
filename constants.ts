@@ -105,7 +105,7 @@ export const THUMBNAILS: ThumbnailItem[] = [
   { 
     id: 'new-4', 
     title: 'Rocket league', 
-    category: 'GAMING', 
+    category: 'Gaming', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459098/rocket_leauge_fbmnxc.jpg',
     ctr: '10.9% CTR'
   },
@@ -133,7 +133,7 @@ export const THUMBNAILS: ThumbnailItem[] = [
   { 
     id: 'new-4', 
     title: 'JJK', 
-    category: 'GAMING', 
+    category: 'Gaming', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459098/jjk_ak9emy.jpg',
     ctr: '10.9% CTR'
   },
