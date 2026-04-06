@@ -13,9 +13,13 @@ export const THUMBNAILS: ThumbnailItem[] = [
   },
   { 
     id: 'g7', 
-    title: 'SURVIVE  THE WILD!', 
-    category: 'IRL', 
-    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389337/harsh_1_k4xujv.jpg', 
+    title: 'Minecraft Arctic Survival', 
+    category: 'Gaming', 
+    // -------------------------------------------------------------------------
+    // REPLACE THE URL BELOW WITH YOUR UPLOADED IMAGE PATH
+    // Example for local file in public folder: '/my-minecraft-thumbnail.jpg'
+    // -------------------------------------------------------------------------
+    imageUrl: 'https://ibb.co/WW9sh6Vz', 
     ctr: '18.4% CTR'
   },
   { 
