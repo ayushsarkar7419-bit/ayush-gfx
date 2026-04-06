@@ -112,21 +112,21 @@ export const THUMBNAILS: ThumbnailItem[] = [
   { 
     id: 'new-4', 
     title: 'gay or straight', 
-    category: 'Irl', 
+    category: 'IRL', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459155/gay_or_straight_cmcbs8.jpg',
     ctr: '10.9% CTR'
   },
   { 
     id: 'new-4', 
     title: 'squid Game', 
-    category: 'Irl', 
+    category: 'IRL', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459157/squid_game.jpg_1_dwa528.jpg',
     ctr: '10.9% CTR'
   },
   { 
     id: 'new-4', 
     title: 'Editing is so boring', 
-    category: 'Tech', 
+    category: 'TECH', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459375/Editing_is_so_boring.jpg_2_g5pqgw.jpg',
     ctr: '10.9% CTR'
   },
@@ -140,7 +140,7 @@ export const THUMBNAILS: ThumbnailItem[] = [
   { 
     id: 'new-4', 
     title: 'Open ai Kill', 
-    category: 'Tech', 
+    category: 'TECH', 
     imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459331/OpenAI_Just_Killed_Their_AI_Companion_Model_byrlmg.jpg',
     ctr: '10.9% CTR'
   },
