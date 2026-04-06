@@ -88,6 +88,13 @@ export const THUMBNAILS: ThumbnailItem[] = [
     imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389830/How_to_Build_ai_Agent_iitkqa.jpg',
     ctr: '12.9% CTR'
   },
+  { 
+    id: 'new-4', 
+    title: 'No Brakes. Just Skill 💀', 
+    category: 'Tech', 
+    imageUrl: 'https://res.cloudinary.com/deav91wr9/image/upload/v1775459158/techno_thumbnail_bkpe24.jpg',
+    ctr: '10.9% CTR'
+  },
   // 11 New Gaming Exclusive Thumbnails (Hidden from All)
   { 
     id: 'g-ex-2', 
