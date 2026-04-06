@@ -90,9 +90,9 @@ export const THUMBNAILS: ThumbnailItem[] = [
   },
   { 
     id: 'new-4', 
-    title: 'Ai Agent', 
-    category: 'Tech', 
-    imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1767389830/How_to_Build_ai_Agent_iitkqa.jpg',
+    title: '', 
+    category: 'gamming', 
+    imageUrl: 'https://www.behance.net/gallery/247075671/Yt-Thumbnail/modules/1428644047',
     ctr: '12.9% CTR'
   },
   { 
