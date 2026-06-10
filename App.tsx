@@ -43,8 +43,8 @@ import {
   Linkedin,
   ArrowUp
 } from 'lucide-react';
-import { CATEGORIES, THUMBNAILS, SKILLS, FEATURES, ABOUT_CONTENT } from './constants';
-import { Category, ThumbnailItem, Review } from './types';
+import { THUMBNAILS, SKILLS, FEATURES, ABOUT_CONTENT } from './constants';
+import { ThumbnailItem, Review } from './types';
 import { SectionHeading } from './components/SectionHeading';
 
 /**
@@ -290,7 +290,7 @@ const ImageModal: React.FC<{ item: ThumbnailItem; onClose: () => void }> = ({ it
       <div className="absolute inset-0 bg-black/95 backdrop-blur-xl" />
       <button 
         onClick={onClose} 
-        className="absolute top-6 right-6 z-[210] w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-orange-600 text-white transition-all hover:rotate-90"
+        className="absolute top-6 right-6 z-[210] w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-orange-600 text-white transition-all duration-300 hover:rotate-90"
       >
         <X className="w-6 h-6" />
       </button>
@@ -305,7 +305,6 @@ const ImageModal: React.FC<{ item: ThumbnailItem; onClose: () => void }> = ({ it
         />
         <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
              <div className="flex items-center gap-4 mb-2">
-                <span className="text-[#FF4D00] text-xs font-black uppercase tracking-[0.2em]">{item.category}</span>
                 {item.ctr && <span className="text-green-500 text-xs font-black uppercase tracking-[0.2em]">{item.ctr}</span>}
              </div>
              <h3 className="text-2xl md:text-4xl font-black text-white tracking-tight">{item.title}</h3>
@@ -318,7 +317,7 @@ const ImageModal: React.FC<{ item: ThumbnailItem; onClose: () => void }> = ({ it
 const ThumbnailCard: React.FC<{ item: ThumbnailItem; onClick: () => void }> = ({ item, onClick }) => (
   <div 
     onClick={onClick}
-    className="group relative w-full aspect-video rounded-2xl overflow-hidden cursor-pointer bg-slate-100 dark:bg-white/5 border border-black/5 dark:border-white/5 hover:border-orange-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-orange-500/20"
+    className="group relative w-full aspect-video rounded-2xl overflow-hidden cursor-pointer bg-slate-100 dark:bg-white/5 border border-black/5 dark:border-white/5 hover:border-orange-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-orange-500/20 hover:-translate-y-2"
   >
     <div className="absolute inset-0 bg-slate-200 dark:bg-zinc-800 animate-pulse" />
     <img 
@@ -336,8 +335,7 @@ const ThumbnailCard: React.FC<{ item: ThumbnailItem; onClick: () => void }> = ({
     </div>
 
     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6 translate-y-2 group-hover:translate-y-0 z-10">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-[#FF4D00] text-[10px] font-black uppercase tracking-widest">{item.category}</span>
+      <div className="flex items-center justify-end mb-2">
         {item.ctr && (
            <span className="bg-green-500/20 text-green-400 text-[10px] font-bold px-2 py-1 rounded border border-green-500/30">
              {item.ctr}
@@ -350,7 +348,7 @@ const ThumbnailCard: React.FC<{ item: ThumbnailItem; onClick: () => void }> = ({
 );
 
 const ClientCard: React.FC<{ client: any }> = ({ client }) => (
-  <div className="flex items-center gap-4 bg-[#0a0a0a] border border-white/5 px-6 py-4 rounded-xl hover:border-white/10 transition-colors group cursor-default min-w-[280px] shadow-lg shadow-black/50">
+  <div className="flex items-center gap-4 bg-[#0a0a0a] border border-white/5 px-6 py-4 rounded-xl hover:border-orange-500/30 hover:bg-white/5 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,77,0,0.15)] transition-all duration-300 group cursor-default min-w-[280px] shadow-lg shadow-black/50">
      <div className="w-10 h-10 rounded-full overflow-hidden border border-white/10 group-hover:border-orange-500/50 transition-colors bg-white/5 shrink-0">
         <img 
           src={client.img} 
@@ -381,7 +379,6 @@ const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>('');
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [paymentStep, setPaymentStep] = useState<'checkout' | 'processing' | 'success'>('checkout');
-  const [selectedCategory, setSelectedCategory] = useState<Category>('All');
   const [selectedProject, setSelectedProject] = useState<ThumbnailItem | null>(null);
 
   // Order Form State
@@ -628,7 +625,7 @@ const App: React.FC = () => {
           : 'bg-transparent py-5 border-transparent'
       }`}>
         <div className="flex items-center gap-3 group animate-fade-in cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-xl transition-all group-hover:scale-105 group-hover:shadow-orange-600/30 p-0.5 bg-gradient-to-br from-orange-500 to-red-600">
+          <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-orange-600/30 p-0.5 bg-gradient-to-br from-orange-500 to-red-600">
             <div className="w-full h-full rounded-[0.9rem] overflow-hidden bg-black">
               <LogoImage />
             </div>
@@ -645,28 +642,28 @@ const App: React.FC = () => {
           <a 
             href="#work" 
             onClick={(e) => scrollToSection(e, 'work')} 
-            className={`${activeSection === 'work' ? 'text-orange-500' : 'hover:text-orange-500'} transition-all hover:-translate-y-0.5`}
+            className={`${activeSection === 'work' ? 'text-orange-500' : 'hover:text-orange-500'} transition-all duration-300 hover:-translate-y-0.5 hover:drop-shadow-[0_0_8px_rgba(249,115,22,0.5)]`}
           >
             Work
           </a>
           <a 
             href="#about" 
             onClick={(e) => scrollToSection(e, 'about')} 
-            className={`${activeSection === 'about' ? 'text-orange-500' : 'hover:text-orange-500'} transition-all hover:-translate-y-0.5`}
+            className={`${activeSection === 'about' ? 'text-orange-500' : 'hover:text-orange-500'} transition-all duration-300 hover:-translate-y-0.5 hover:drop-shadow-[0_0_8px_rgba(249,115,22,0.5)]`}
           >
             About
           </a>
           <a 
             href="#reviews" 
             onClick={(e) => scrollToSection(e, 'reviews')} 
-            className={`${activeSection === 'reviews' ? 'text-orange-500' : 'hover:text-orange-500'} transition-all hover:-translate-y-0.5`}
+            className={`${activeSection === 'reviews' ? 'text-orange-500' : 'hover:text-orange-500'} transition-all duration-300 hover:-translate-y-0.5 hover:drop-shadow-[0_0_8px_rgba(249,115,22,0.5)]`}
           >
             Reviews
           </a>
           <a 
             href="#contact" 
             onClick={(e) => scrollToSection(e, 'contact')} 
-            className={`${activeSection === 'contact' ? 'text-orange-500' : 'hover:text-orange-500'} transition-all hover:-translate-y-0.5`}
+            className={`${activeSection === 'contact' ? 'text-orange-500' : 'hover:text-orange-500'} transition-all duration-300 hover:-translate-y-0.5 hover:drop-shadow-[0_0_8px_rgba(249,115,22,0.5)]`}
           >
             Contact
           </a>
@@ -675,7 +672,7 @@ const App: React.FC = () => {
         <div className="flex items-center gap-4 animate-fade-in">
           <button 
             onClick={toggleTheme}
-            className="p-2.5 rounded-full glass border border-black/10 dark:border-white/10 hover:border-orange-500 dark:hover:border-orange-500 transition-all active:scale-95 group"
+            className="p-2.5 rounded-full glass border border-black/10 dark:border-white/10 hover:border-orange-500 dark:hover:border-orange-500 transition-all duration-300 hover:rotate-12 hover:scale-110 active:scale-95 group"
           >
             {isDark ? (
               <Sun className="w-5 h-5 text-gray-400 group-hover:text-orange-500 transition-colors" />
@@ -685,7 +682,7 @@ const App: React.FC = () => {
           </button>
           <button 
             onClick={() => setShowOrderForm(true)}
-            className="bg-[#FF4D00] hover:bg-orange-600 text-white px-7 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-105 shadow-lg shadow-orange-600/20 active:scale-95 relative overflow-hidden group"
+            className="bg-[#FF4D00] hover:bg-orange-600 text-white px-7 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-105 shadow-lg hover:shadow-orange-600/40 hover:-translate-y-0.5 active:scale-95 relative overflow-hidden group"
           >
             <span className="relative z-10">Hire Me</span>
             <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
@@ -711,11 +708,11 @@ const App: React.FC = () => {
             I design scroll-stopping YouTube thumbnails that boost your <span className="text-slate-900 dark:text-white font-bold">CTR</span> and grow your channel.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6 w-full animate-fade-in">
-            <a href="#work" onClick={(e) => scrollToSection(e, 'work')} className="relative group px-12 py-5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl font-black text-xl text-white transition-all shadow-[0_0_30px_rgba(234,88,12,0.2)] hover:shadow-[0_0_50px_rgba(234,88,12,0.4)] hover:scale-[1.05] active:scale-95 flex items-center gap-3">
+            <a href="#work" onClick={(e) => scrollToSection(e, 'work')} className="relative group px-12 py-5 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl font-black text-xl text-white transition-all shadow-[0_0_30px_rgba(234,88,12,0.2)] hover:shadow-[0_0_50px_rgba(234,88,12,0.6)] hover:scale-[1.05] hover:-translate-y-1 active:scale-95 flex items-center gap-3 duration-300">
               See Work!
               <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </a>
-            <button onClick={() => setShowOrderForm(true)} className="px-12 py-5 glass border border-black/10 dark:border-white/10 rounded-2xl font-bold text-xl text-slate-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all active:scale-95">
+            <button onClick={() => setShowOrderForm(true)} className="px-12 py-5 glass border border-black/10 dark:border-white/10 rounded-2xl font-bold text-xl text-slate-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 hover:border-black/20 dark:hover:border-white/20 hover:shadow-lg hover:-translate-y-1 transition-all active:scale-95 duration-300">
               Order Now
             </button>
           </div>
@@ -725,28 +722,17 @@ const App: React.FC = () => {
       {/* Work Grid */}
       <section id="work" className="py-24 px-6 md:px-12 w-full max-w-[95%] 2xl:max-w-[1800px] mx-auto">
         <SectionHeading title="Recent Projects" center />
-        <div className="flex flex-wrap justify-center gap-3 mb-16">
-          {CATEGORIES.map(category => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border ${
-                selectedCategory === category 
-                  ? 'bg-orange-600 border-orange-600 text-white shadow-xl shadow-orange-600/20' 
-                  : 'bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-slate-600 dark:text-gray-400 hover:border-orange-500/50'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-          {(selectedCategory === 'All' 
-              ? THUMBNAILS.filter(t => !t.hiddenFromAll)
-              : THUMBNAILS.filter(t => t.category === selectedCategory)
-           ).map(thumb => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 mt-16">
+          {THUMBNAILS.map(thumb => (
             <ThumbnailCard key={thumb.id} item={thumb} onClick={() => setSelectedProject(thumb)} />
           ))}
+          {THUMBNAILS.length === 0 && (
+            <div className="col-span-full py-20 flex flex-col items-center justify-center text-slate-500 dark:text-zinc-500">
+              <ImageIcon className="w-16 h-16 mb-4 opacity-50" />
+              <p className="text-xl font-medium">No thumbnails added yet.</p>
+              <p className="text-sm mt-2">Add your thumbnails to the THUMBNAILS array in constants.ts</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -813,13 +799,13 @@ const App: React.FC = () => {
                 </p>
                 <div className="flex flex-wrap gap-3">
                   {SKILLS.map(skill => (
-                    <div key={skill.name} className="bg-white/5 border border-white/10 px-5 py-2.5 rounded-full text-xs font-bold text-white uppercase tracking-wider hover:bg-white/10 transition-colors">
+                    <div key={skill.name} className="bg-white/5 border border-white/10 px-5 py-2.5 rounded-full text-xs font-bold text-white uppercase tracking-wider hover:bg-white/10 hover:border-white/20 hover:scale-105 transition-all duration-300 cursor-default">
                       {skill.name}
                     </div>
                   ))}
                 </div>
                 <div className="pt-4">
-                  <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className="inline-flex items-center gap-3 text-orange-500 font-bold uppercase tracking-widest text-xs hover:gap-5 transition-all">
+                  <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className="inline-flex items-center gap-3 text-orange-500 font-bold uppercase tracking-widest text-xs hover:gap-6 hover:text-orange-400 transition-all duration-300">
                     Let's work together <ArrowRight className="w-4 h-4" />
                   </a>
                 </div>
@@ -850,20 +836,20 @@ const App: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
             
             {/* CARD 1: More Reach (Growth Chart) */}
-            <div className="bg-[#0f0f0f] rounded-3xl p-8 border border-white/5 hover:border-white/10 transition-all group flex flex-col h-full hover:-translate-y-1 duration-500 shadow-2xl shadow-black">
+            <div className="bg-[#0f0f0f] rounded-3xl p-8 border border-white/5 hover:border-white/10 transition-all group flex flex-col h-full hover:-translate-y-2 hover:shadow-2xl hover:shadow-orange-500/10 duration-500 shadow-2xl shadow-black">
                <div className="h-48 mb-8 bg-[#0a0a0a] rounded-2xl border border-white/5 flex flex-col justify-between p-6 relative overflow-hidden group-hover:bg-[#0c0c0c] transition-colors">
                   <div className="text-[#ccff00] font-bold text-sm mb-4">Growth</div>
                   <div className="flex items-end justify-between gap-2 h-24 mt-auto w-full px-2">
-                     <div className="w-1.5 h-[30%] bg-[#ccff00]/20 rounded-t-full"></div>
-                     <div className="w-1.5 h-[45%] bg-[#ccff00]/30 rounded-t-full"></div>
-                     <div className="w-1.5 h-[35%] bg-[#ccff00]/20 rounded-t-full"></div>
-                     <div className="w-1.5 h-[60%] bg-[#ccff00]/40 rounded-t-full"></div>
-                     <div className="w-1.5 h-[50%] bg-[#ccff00]/30 rounded-t-full"></div>
-                     <div className="w-1.5 h-[75%] bg-[#ccff00]/60 rounded-t-full"></div>
-                     <div className="w-1.5 h-[65%] bg-[#ccff00]/50 rounded-t-full"></div>
-                     <div className="w-1.5 h-[90%] bg-[#ccff00] rounded-t-full shadow-[0_0_15px_#ccff00]"></div>
-                     <div className="w-1.5 h-[40%] bg-[#ccff00]/20 rounded-t-full"></div>
-                     <div className="w-1.5 h-[55%] bg-[#ccff00]/30 rounded-t-full"></div>
+                     <div className="w-1.5 h-[30%] bg-[#ccff00]/20 rounded-t-full animate-grow-bar" style={{ animationDelay: '0ms' }}></div>
+                     <div className="w-1.5 h-[45%] bg-[#ccff00]/30 rounded-t-full animate-grow-bar" style={{ animationDelay: '100ms' }}></div>
+                     <div className="w-1.5 h-[35%] bg-[#ccff00]/20 rounded-t-full animate-grow-bar" style={{ animationDelay: '200ms' }}></div>
+                     <div className="w-1.5 h-[60%] bg-[#ccff00]/40 rounded-t-full animate-grow-bar" style={{ animationDelay: '300ms' }}></div>
+                     <div className="w-1.5 h-[50%] bg-[#ccff00]/30 rounded-t-full animate-grow-bar" style={{ animationDelay: '400ms' }}></div>
+                     <div className="w-1.5 h-[75%] bg-[#ccff00]/60 rounded-t-full animate-grow-bar" style={{ animationDelay: '500ms' }}></div>
+                     <div className="w-1.5 h-[65%] bg-[#ccff00]/50 rounded-t-full animate-grow-bar" style={{ animationDelay: '600ms' }}></div>
+                     <div className="w-1.5 h-[90%] bg-[#ccff00] rounded-t-full shadow-[0_0_15px_#ccff00] animate-grow-bar" style={{ animationDelay: '700ms' }}></div>
+                     <div className="w-1.5 h-[40%] bg-[#ccff00]/20 rounded-t-full animate-grow-bar" style={{ animationDelay: '800ms' }}></div>
+                     <div className="w-1.5 h-[55%] bg-[#ccff00]/30 rounded-t-full animate-grow-bar" style={{ animationDelay: '900ms' }}></div>
                   </div>
                   <div className="flex justify-between text-[10px] text-white/20 font-mono mt-2 uppercase tracking-wider">
                      <span>Nov 10</span>
@@ -876,11 +862,11 @@ const App: React.FC = () => {
             </div>
 
             {/* CARD 2: Trending Thumbnails (Notification) */}
-            <div className="bg-[#0f0f0f] rounded-3xl p-8 border border-white/5 hover:border-white/10 transition-all group flex flex-col h-full hover:-translate-y-1 duration-500 shadow-2xl shadow-black">
+            <div className="bg-[#0f0f0f] rounded-3xl p-8 border border-white/5 hover:border-white/10 transition-all group flex flex-col h-full hover:-translate-y-2 hover:shadow-2xl hover:shadow-orange-500/10 duration-500 shadow-2xl shadow-black">
                <div className="h-48 mb-8 bg-[#0a0a0a] rounded-2xl border border-white/5 flex items-center justify-center relative overflow-hidden group-hover:bg-[#0c0c0c] transition-colors">
                   
                   {/* Mock UI Element */}
-                  <div className="relative z-10 bg-[#151515] border border-white/10 rounded-2xl p-4 w-[80%] shadow-2xl">
+                  <div className="relative z-10 bg-[#151515] border border-white/10 rounded-2xl p-4 w-[80%] shadow-2xl animate-float">
                      <div className="flex items-center justify-between mb-4">
                         <div className="flex gap-1.5">
                            <div className="w-2 h-2 rounded-full bg-red-500"></div>
@@ -915,7 +901,7 @@ const App: React.FC = () => {
             </div>
 
             {/* CARD 3: Scalable as you grow (Graph) */}
-            <div className="bg-[#0f0f0f] rounded-3xl p-8 border border-white/5 hover:border-white/10 transition-all group flex flex-col h-full hover:-translate-y-1 duration-500 shadow-2xl shadow-black">
+            <div className="bg-[#0f0f0f] rounded-3xl p-8 border border-white/5 hover:border-white/10 transition-all group flex flex-col h-full hover:-translate-y-2 hover:shadow-2xl hover:shadow-orange-500/10 duration-500 shadow-2xl shadow-black">
                <div className="h-48 mb-8 bg-[#0a0a0a] rounded-2xl border border-white/5 flex items-center justify-center relative overflow-hidden group-hover:bg-[#0c0c0c] transition-colors p-6">
                   {/* Grid Lines */}
                   <div className="absolute inset-0 flex justify-between px-6 opacity-10 pointer-events-none">
@@ -940,7 +926,7 @@ const App: React.FC = () => {
                         stroke="#84cc16" 
                         strokeWidth="3" 
                         strokeLinecap="round"
-                        className="drop-shadow-[0_0_8px_rgba(132,204,22,0.5)]"
+                        className="drop-shadow-[0_0_8px_rgba(132,204,22,0.5)] animate-path-draw"
                      />
                      <circle cx="160" cy="20" r="5" fill="#84cc16" className="animate-pulse shadow-[0_0_10px_#84cc16]" />
                      <circle cx="160" cy="20" r="10" fill="#84cc16" fillOpacity="0.2" className="animate-ping" />
@@ -969,7 +955,7 @@ const App: React.FC = () => {
                    { name: "Live-stream Assets", icon: Radio },
                    { name: "Social Media Post", icon: Share2 },
                 ].map((service) => (
-                   <div key={service.name} className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/10 bg-white/5 hover:border-red-600/50 hover:bg-red-600/10 transition-all cursor-default group">
+                   <div key={service.name} className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/10 bg-white/5 hover:border-red-600/50 hover:bg-red-600/10 hover:-translate-y-1 hover:shadow-lg hover:shadow-red-900/20 transition-all duration-300 cursor-default group">
                       <div className="w-1.5 h-1.5 rounded-full bg-red-600 group-hover:scale-125 transition-transform"></div>
                       <span className="text-sm font-medium text-gray-300 group-hover:text-white">{service.name}</span>
                    </div>
@@ -994,7 +980,7 @@ const App: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
              
              {/* Process 1 */}
-             <div className="bg-[#0f0f0f] rounded-3xl p-10 border border-white/5 hover:border-white/10 transition-all group flex flex-col h-full hover:-translate-y-1 duration-500">
+             <div className="bg-[#0f0f0f] rounded-3xl p-10 border border-white/5 hover:border-white/10 transition-all group flex flex-col h-full hover:-translate-y-2 hover:shadow-2xl hover:shadow-orange-500/10 duration-500">
                 <div className="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center mb-6 text-red-500 group-hover:scale-110 transition-transform duration-500">
                    <Box className="w-6 h-6" />
                 </div>
@@ -1003,7 +989,7 @@ const App: React.FC = () => {
              </div>
 
              {/* Process 2 */}
-             <div className="bg-[#0f0f0f] rounded-3xl p-10 border border-white/5 hover:border-white/10 transition-all group flex flex-col h-full hover:-translate-y-1 duration-500">
+             <div className="bg-[#0f0f0f] rounded-3xl p-10 border border-white/5 hover:border-white/10 transition-all group flex flex-col h-full hover:-translate-y-2 hover:shadow-2xl hover:shadow-orange-500/10 duration-500">
                 <div className="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center mb-6 text-red-500 group-hover:scale-110 transition-transform duration-500 relative">
                    <div className="absolute w-4 h-4 rounded-full bg-red-500 opacity-60 left-3"></div>
                    <div className="absolute w-4 h-4 rounded-full bg-red-500 opacity-60 right-3"></div>
@@ -1013,7 +999,7 @@ const App: React.FC = () => {
              </div>
 
              {/* Process 3 */}
-             <div className="bg-[#0f0f0f] rounded-3xl p-10 border border-white/5 hover:border-white/10 transition-all group flex flex-col h-full hover:-translate-y-1 duration-500">
+             <div className="bg-[#0f0f0f] rounded-3xl p-10 border border-white/5 hover:border-white/10 transition-all group flex flex-col h-full hover:-translate-y-2 hover:shadow-2xl hover:shadow-orange-500/10 duration-500">
                 <div className="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center mb-6 text-red-500 group-hover:scale-110 transition-transform duration-500">
                    <Fingerprint className="w-6 h-6" />
                 </div>
@@ -1065,7 +1051,7 @@ const App: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
              {REVIEWS.map((review, idx) => (
-                <div key={idx} className="bg-[#080808] border border-white/5 p-8 rounded-3xl relative group hover:border-white/10 transition-all hover:-translate-y-1 shadow-2xl">
+                <div key={idx} className="bg-[#080808] border border-white/5 p-8 rounded-3xl relative group hover:border-orange-500/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(255,255,255,0.1)] shadow-2xl">
                    <div className="flex justify-between items-start mb-8">
                       <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white/5 p-0.5">
                          <div className="w-full h-full rounded-full overflow-hidden bg-white/5">
@@ -1111,7 +1097,7 @@ const App: React.FC = () => {
             {/* Primary Actions */}
             <RevealOnScroll delay={200}>
               <div className="flex flex-col md:flex-row gap-6 justify-center mt-12 mb-16">
-                <a href="mailto:ayushsarkar7419@gmail.com" className="flex items-center gap-4 bg-[#0a0a0a] p-5 rounded-2xl border border-white/10 hover:border-white/20 transition-all group w-full md:w-auto min-w-[200px] justify-center md:justify-start">
+                <a href="mailto:ayushsarkar7419@gmail.com" className="flex items-center gap-4 bg-[#0a0a0a] p-5 rounded-2xl border border-white/10 hover:border-white/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group w-full md:w-auto min-w-[200px] justify-center md:justify-start">
                     <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center group-hover:bg-white/10 transition-colors">
                       <Mail className="w-5 h-5 text-white" />
                     </div>
@@ -1120,7 +1106,7 @@ const App: React.FC = () => {
                       <div className="font-bold text-lg text-white">Contact Me</div>
                     </div>
                 </a>
-                <button onClick={() => setShowOrderForm(true)} className="flex items-center gap-4 bg-gradient-to-r from-orange-600 to-red-600 p-5 rounded-2xl shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 transition-all group w-full md:w-auto min-w-[200px] justify-center md:justify-start">
+                <button onClick={() => setShowOrderForm(true)} className="flex items-center gap-4 bg-gradient-to-r from-orange-600 to-red-600 p-5 rounded-2xl shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group w-full md:w-auto min-w-[200px] justify-center md:justify-start">
                     <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                       <Zap className="w-5 h-5 text-white" />
                     </div>
@@ -1136,33 +1122,33 @@ const App: React.FC = () => {
             <RevealOnScroll delay={400}>
               <div className="grid grid-cols-5 gap-2 md:gap-4 max-w-3xl mx-auto px-2 md:px-0">
                 {/* Instagram */}
-                <a href="https://www.instagram.com/ayush_gfx8/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center aspect-square rounded-2xl md:rounded-3xl bg-pink-500/5 border border-pink-500/10 hover:bg-pink-500/10 hover:border-pink-500/30 transition-all group">
+                <a href="https://www.instagram.com/ayush_gfx8/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center aspect-square rounded-2xl md:rounded-3xl bg-pink-500/5 border border-pink-500/10 hover:bg-pink-500/10 hover:border-pink-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(236,72,153,0.2)] group">
                     <Instagram className="w-6 h-6 md:w-10 md:h-10 text-pink-500 mb-1.5 md:mb-3 group-hover:scale-110 transition-transform" />
                     <span className="text-[10px] md:text-sm font-medium text-pink-500/80 group-hover:text-pink-500 hidden sm:block">Instagram</span>
                     <span className="text-[10px] md:text-sm font-medium text-pink-500/80 group-hover:text-pink-500 sm:hidden">Insta</span>
                 </a>
 
                 {/* LinkedIn */}
-                <a href="https://in.linkedin.com/in/ayush-editor-2977012b6" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center aspect-square rounded-2xl md:rounded-3xl bg-blue-600/5 border border-blue-600/10 hover:bg-blue-600/10 hover:border-blue-600/30 transition-all group">
+                <a href="https://in.linkedin.com/in/ayush-editor-2977012b6" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center aspect-square rounded-2xl md:rounded-3xl bg-blue-600/5 border border-blue-600/10 hover:bg-blue-600/10 hover:border-blue-600/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] group">
                     <Linkedin className="w-6 h-6 md:w-10 md:h-10 text-blue-500 mb-1.5 md:mb-3 group-hover:scale-110 transition-transform" />
                     <span className="text-[10px] md:text-sm font-medium text-blue-500/80 group-hover:text-blue-500 hidden sm:block">LinkedIn</span>
                     <span className="text-[10px] md:text-sm font-medium text-blue-500/80 group-hover:text-blue-500 sm:hidden">Linkd</span>
                 </a>
 
                 {/* Discord */}
-                <a href="https://discord.gg/ztGW6TWX49" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center aspect-square rounded-2xl md:rounded-3xl bg-indigo-500/5 border border-indigo-500/10 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all group">
+                <a href="https://discord.gg/ztGW6TWX49" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center aspect-square rounded-2xl md:rounded-3xl bg-indigo-500/5 border border-indigo-500/10 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(99,102,241,0.2)] group">
                     <DiscordIcon className="w-6 h-6 md:w-10 md:h-10 text-indigo-500 mb-1.5 md:mb-3 group-hover:scale-110 transition-transform" />
                     <span className="text-[10px] md:text-sm font-medium text-indigo-500/80 group-hover:text-indigo-500">Discord</span>
                 </a>
 
                 {/* X */}
-                <a href="https://x.com/Ayush_x_sujay" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center aspect-square rounded-2xl md:rounded-3xl bg-zinc-500/5 border border-zinc-500/10 hover:bg-zinc-500/10 hover:border-zinc-500/30 transition-all group">
+                <a href="https://x.com/Ayush_x_sujay" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center aspect-square rounded-2xl md:rounded-3xl bg-zinc-500/5 border border-zinc-500/10 hover:bg-zinc-500/10 hover:border-zinc-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(113,113,122,0.2)] group">
                     <XIcon className="w-6 h-6 md:w-10 md:h-10 text-zinc-400 mb-1.5 md:mb-3 group-hover:scale-110 transition-transform" />
                     <span className="text-[10px] md:text-sm font-medium text-zinc-400/80 group-hover:text-zinc-300">X</span>
                 </a>
 
                 {/* WhatsApp */}
-                <a href="https://wa.link/oky36b" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center aspect-square rounded-2xl md:rounded-3xl bg-green-500/5 border border-green-500/10 hover:bg-green-500/10 hover:border-green-500/30 transition-all group">
+                <a href="https://wa.link/oky36b" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center aspect-square rounded-2xl md:rounded-3xl bg-green-500/5 border border-green-500/10 hover:bg-green-500/10 hover:border-green-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(34,197,94,0.2)] group">
                     <WhatsAppIcon className="w-6 h-6 md:w-10 md:h-10 text-green-500 mb-1.5 md:mb-3 group-hover:scale-110 transition-transform" />
                     <span className="text-[10px] md:text-sm font-medium text-green-500/80 group-hover:text-green-500">WhatsApp</span>
                 </a>
@@ -1184,7 +1170,7 @@ const App: React.FC = () => {
            
            <button 
              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-             className="group flex items-center gap-2 px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg hover:bg-slate-50 dark:hover:bg-white/10 transition-all text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-gray-300"
+             className="group flex items-center gap-2 px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg hover:bg-slate-50 dark:hover:bg-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-gray-300"
            >
              <ArrowUp className="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform" />
              Back to top
@@ -1207,7 +1193,7 @@ const App: React.FC = () => {
                    <h3 className="text-xl font-black uppercase tracking-tight">Project Order</h3>
                    <p className="text-xs text-slate-500 dark:text-gray-400">Let's build your next viral thumbnail</p>
                 </div>
-                <button onClick={closeModals} className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+                <button onClick={closeModals} className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all duration-300 hover:rotate-90">
                    <X className="w-4 h-4" />
                 </button>
              </div>
@@ -1276,16 +1262,16 @@ const App: React.FC = () => {
                            <button 
                               key={niche}
                               onClick={() => handleNicheSelect(niche)}
-                              className={`px-4 py-2 rounded-lg text-[10px] font-bold border transition-all ${
+                              className={`px-4 py-2 rounded-lg text-[10px] font-bold border transition-all duration-200 hover:scale-105 hover:shadow-md ${
                                 selectedNiche === niche 
                                   ? 'bg-orange-600 border-orange-600 text-white' 
-                                  : 'bg-transparent border-slate-200 dark:border-white/10 hover:border-orange-500 text-slate-600 dark:text-gray-400'
+                                  : 'bg-transparent border-slate-200 dark:border-white/10 hover:border-orange-500 hover:text-orange-500 hover:bg-orange-500/5 text-slate-600 dark:text-gray-400'
                               }`}
                            >
                               {niche}
                            </button>
                          ))}
-                         <button onClick={() => setShowAllNiches(!showAllNiches)} className="px-4 py-2 rounded-lg text-[10px] font-bold border border-dashed border-slate-300 dark:border-white/20 text-slate-500 hover:text-orange-500">
+                         <button onClick={() => setShowAllNiches(!showAllNiches)} className="px-4 py-2 rounded-lg text-[10px] font-bold border border-dashed border-slate-300 dark:border-white/20 text-slate-500 hover:text-orange-500 hover:border-orange-500 transition-colors">
                             {showAllNiches ? 'Show Less' : `+${niches.length - 8} More`}
                          </button>
                       </div>
@@ -1321,7 +1307,7 @@ const App: React.FC = () => {
                                 <button
                                   key={c}
                                   onClick={() => setCurrency(c as any)}
-                                  className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${currency === c ? 'bg-slate-900 text-white' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'}`}
+                                  className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all duration-200 hover:bg-slate-100 dark:hover:bg-white/5 ${currency === c ? 'bg-slate-900 text-white hover:!bg-slate-800' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'}`}
                                 >
                                   {c}
                                 </button>
@@ -1331,9 +1317,9 @@ const App: React.FC = () => {
                         <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-200 dark:border-white/10">
                            <label className="text-xs font-bold block mb-2">Quantity</label>
                            <div className="flex items-center justify-between bg-white dark:bg-black p-1 rounded-lg border border-slate-200 dark:border-white/10 h-[34px]">
-                              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-8 h-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-white/10 rounded">-</button>
+                              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-8 h-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-white/10 rounded active:scale-90 transition-transform">-</button>
                               <span className="text-sm font-bold">{quantity}</span>
-                              <button onClick={() => setQuantity(quantity + 1)} className="w-8 h-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-white/10 rounded">+</button>
+                              <button onClick={() => setQuantity(quantity + 1)} className="w-8 h-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-white/10 rounded active:scale-90 transition-transform">+</button>
                            </div>
                         </div>
                       </div>
@@ -1382,7 +1368,7 @@ const App: React.FC = () => {
                          <button 
                             onClick={handleApplyCoupon}
                             disabled={appliedDiscount > 0}
-                            className={`px-4 rounded-lg text-xs font-bold border transition-all ${
+                            className={`px-4 rounded-lg text-xs font-bold border transition-all hover:scale-105 active:scale-95 duration-200 ${
                                 appliedDiscount > 0 
                                 ? 'bg-green-500 border-green-500 text-white' 
                                 : 'bg-slate-900 dark:bg-white text-white dark:text-black border-transparent hover:opacity-90'
@@ -1407,14 +1393,14 @@ const App: React.FC = () => {
 
                       <button 
                         onClick={handleConfirmOrder}
-                        className={`w-full py-4 rounded-xl font-black uppercase tracking-widest text-white shadow-xl transition-all ${
+                        className={`w-full py-4 rounded-xl font-black uppercase tracking-widest text-white shadow-xl transition-all duration-300 active:scale-[0.98] ${
                             isFormFilled 
                             ? 'bg-gradient-to-r from-orange-600 to-red-600 hover:shadow-orange-500/30 hover:scale-[1.02]' 
                             : 'bg-slate-300 dark:bg-white/10 cursor-not-allowed text-slate-500'
                         }`}
                         disabled={!isFormFilled}
                       >
-                         Place Order
+                         Confirm Order
                       </button>
                    </div>
                  </>
@@ -1437,7 +1423,7 @@ const App: React.FC = () => {
                     <p className="text-slate-500 dark:text-gray-400 max-w-sm mb-8 leading-relaxed">
                        Thank you, <b>{fullName.split(' ')[0]}</b>! I've received your project details. I'll review them and reach out to you at <span className="text-orange-500">{email}</span> within 24 hours.
                     </p>
-                    <button onClick={closeModals} className="px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-black rounded-xl font-bold uppercase tracking-widest hover:opacity-90">
+                    <button onClick={closeModals} className="px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-black rounded-xl font-bold uppercase tracking-widest hover:opacity-90 transition-all duration-300 hover:scale-105 active:scale-95">
                        Return to Portfolio
                     </button>
                  </div>

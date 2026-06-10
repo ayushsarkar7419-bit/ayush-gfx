@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,20 +7,7 @@
   <title>Professional YouTube Thumbnail Designer | High CTR Thumbnails</title>
   <meta name="description" content="I design scroll-stopping YouTube thumbnails that boost CTR, increase views, and grow your channel using viewer psychology and expressive design.">
   <link rel="icon" type="image/gif" href="https://res.cloudinary.com/dijsihxp0/image/upload/v1767634879/485535190016201_tpkkf2.gif">
-  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Sora', 'sans-serif'],
-          },
-        },
-      },
-    }
-  </script>
   <style>
     body {
       font-family: 'Sora', sans-serif;
@@ -122,19 +110,27 @@
     .animate-marquee:hover {
       animation-play-state: paused;
     }
+
+    /* Graph Animations */
+    @keyframes grow-bar {
+      from { transform: scaleY(0); }
+      to { transform: scaleY(1); }
+    }
+    .animate-grow-bar {
+      transform-origin: bottom;
+      animation: grow-bar 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes path-draw {
+      from { stroke-dashoffset: 300; }
+      to { stroke-dashoffset: 0; }
+    }
+    .animate-path-draw {
+      stroke-dasharray: 300;
+      stroke-dashoffset: 300;
+      animation: path-draw 3s ease-out forwards;
+    }
   </style>
-<script type="importmap">
-{
-  "imports": {
-    "vite": "https://esm.sh/vite@^7.3.0",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
-  }
-}
-</script>
 </head>
 <body class="bg-white dark:bg-[#050505] text-slate-900 dark:text-white overflow-x-hidden">
   <div id="root"></div>

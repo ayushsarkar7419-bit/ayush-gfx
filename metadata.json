@@ -25,5 +25,6 @@
   "robots": "index, follow",
   "language": "en",
   "viewport": "width=device-width, initial-scale=1.0",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "majorCapabilities": []
 }
