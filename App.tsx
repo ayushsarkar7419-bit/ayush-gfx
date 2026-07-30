@@ -383,16 +383,17 @@ const App: React.FC = () => {
 
   // Order Form State
   const [quantity, setQuantity] = useState(1);
+  const [currency, setCurrency] = useState<'INR' | 'USD'>('INR');
+  const [customAmount, setCustomAmount] = useState<string>('');
   const [selectedNiche, setSelectedNiche] = useState<string | null>(null);
   const [customNiche, setCustomNiche] = useState('');
   const [showAllNiches, setShowAllNiches] = useState(false);
-  const [currency, setCurrency] = useState<'INR' | 'USD'>('INR');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [referenceLinks, setReferenceLinks] = useState('');
   const [projectDetails, setProjectDetails] = useState('');
-  
+
   // Coupon State
   const [couponCode, setCouponCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(0);
@@ -413,25 +414,21 @@ const App: React.FC = () => {
     'TRAVEL', 'MUSIC', 'COMEDY', 'PODCAST', 'OTHERS'
   ];
 
-  const estimatedInvestment = useMemo(() => {
-    const price = currency === 'INR' ? 1500 : 20;
-    const total = price * quantity;
-    return appliedDiscount > 0 ? total - (total * appliedDiscount) : total;
-  }, [quantity, currency, appliedDiscount]);
-
   const handleApplyCoupon = () => {
-    const code = couponCode.toUpperCase();
-    if (code === 'AYUSH20') {
-        setAppliedDiscount(0.20);
-        setCouponError(false);
-    } else if (code === 'AYUSH18') {
-        setAppliedDiscount(0.28);
-        setCouponError(false);
+    if (couponCode.toUpperCase() === 'AYUSH10') {
+      setAppliedDiscount(0.10);
+      setCouponError(false);
     } else {
-        setCouponError(true);
-        setTimeout(() => setCouponError(false), 2000);
+      setAppliedDiscount(0);
+      setCouponError(true);
     }
   };
+
+  const estimatedInvestment = useMemo(() => {
+    const perItem = currency === 'INR' ? 1000 : 15;
+    const subtotal = quantity * perItem;
+    return subtotal - (subtotal * appliedDiscount);
+  }, [quantity, currency, appliedDiscount]);
 
   // Check if all required fields are filled for button fade logic
   const isFormFilled = useMemo(() => {
@@ -557,14 +554,11 @@ const App: React.FC = () => {
       email: email,
       phone: phone,
       niche: selectedNiche === 'OTHERS' ? `OTHERS: ${customNiche}` : (selectedNiche || 'Not Selected'),
-      quantity: quantity,
-      estimated_investment: `${currency === 'INR' ? '₹' : '$'}${estimatedInvestment.toLocaleString()}`,
-      coupon_code: appliedDiscount > 0 ? couponCode : 'None',
-      currency: currency,
       
       // Additional Info
       reference_links: referenceLinks,
-      project_details: projectDetails
+      project_details: projectDetails,
+      total_investment: `${currency === 'INR' ? '₹' : '$'}${customAmount || estimatedInvestment}`
     };
 
     try {
@@ -1318,7 +1312,19 @@ const App: React.FC = () => {
                            <label className="text-xs font-bold block mb-2">Quantity</label>
                            <div className="flex items-center justify-between bg-white dark:bg-black p-1 rounded-lg border border-slate-200 dark:border-white/10 h-[34px]">
                               <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-8 h-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-white/10 rounded active:scale-90 transition-transform">-</button>
-                              <span className="text-sm font-bold">{quantity}</span>
+                              <input 
+                                type="number"
+                                min="1"
+                                value={quantity || ''}
+                                onChange={(e) => {
+                                  const val = parseInt(e.target.value);
+                                  setQuantity(isNaN(val) ? 0 : val);
+                                }}
+                                onBlur={() => {
+                                  if (quantity < 1) setQuantity(1);
+                                }}
+                                className="w-12 text-center bg-transparent text-sm font-bold focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                              />
                               <button onClick={() => setQuantity(quantity + 1)} className="w-8 h-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-white/10 rounded active:scale-90 transition-transform">+</button>
                            </div>
                         </div>
@@ -1384,8 +1390,15 @@ const App: React.FC = () => {
                             {appliedDiscount > 0 && <span className="block text-[10px] text-green-500 font-bold">{(appliedDiscount * 100).toFixed(0)}% OFF APPLIED</span>}
                          </div>
                          <div className="text-right">
-                             <div className="text-3xl font-black text-slate-900 dark:text-white">
-                                {currency === 'INR' ? '₹' : '$'}{estimatedInvestment.toLocaleString()}
+                             <div className="flex justify-end text-3xl font-black text-slate-900 dark:text-white items-center gap-0.5">
+                                <span>{currency === 'INR' ? '₹' : '$'}</span>
+                                <input
+                                  type="number"
+                                  placeholder={estimatedInvestment.toString()}
+                                  value={customAmount}
+                                  onChange={(e) => setCustomAmount(e.target.value)}
+                                  className="w-[120px] bg-transparent text-right outline-none focus:border-b-2 border-orange-500/50 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                />
                              </div>
                              <div className="text-[10px] text-slate-400 font-medium">Approx. Delivery: {quantity * 24} Hours</div>
                          </div>

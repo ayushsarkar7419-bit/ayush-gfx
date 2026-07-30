@@ -10,7 +10,10 @@ export const THUMBNAILS: ThumbnailItem[] = [
   { id: '6', title: 'Thumbnail 6', imageUrl: 'https://res.cloudinary.com/dxrl3rarj/image/upload/v1781055171/gay_or_straight_wd2man.jpg', ctr: '19.3% CTR' },
   { id: '7', title: 'Thumbnail 7', imageUrl: 'https://res.cloudinary.com/dxrl3rarj/image/upload/v1781055392/Most_Hated_vs_Most_Loved_m6wh4j.jpg', ctr: '17.7% CTR' },
   { id: '8', title: 'Thumbnail 8', imageUrl: 'https://res.cloudinary.com/dxrl3rarj/image/upload/v1781055171/antarctica_1_inh9sy.jpg', ctr: '20.1% CTR' },
-  { id: '9', title: 'Thumbnail 9', imageUrl: 'https://res.cloudinary.com/dxrl3rarj/image/upload/v1781055171/HOW_TOYOTA_DOMINATED_CAR_INDUSTRY_FOR_YEARS_nuuiif.jpg', ctr: '22.5% CTR' }
+  { id: '9', title: 'Thumbnail 9', imageUrl: 'https://res.cloudinary.com/dxrl3rarj/image/upload/v1781055171/HOW_TOYOTA_DOMINATED_CAR_INDUSTRY_FOR_YEARS_nuuiif.jpg', ctr: '22.5% CTR' },
+  { id: '10', title: 'Thumbnail 10', imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1785369003/train_b1nfuf.jpg', ctr: '15.3% CTR' },
+  { id: '11', title: 'Thumbnail 11', imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1785369070/cheap_vs_expensive_burger-Recovered_ruf1m8.jpg', ctr: '17.8% CTR' },
+  { id: '12', title: 'Thumbnail 12', imageUrl: 'https://res.cloudinary.com/dijsihxp0/image/upload/v1785369488/Spider_man_2002_xristm.jpg', ctr: '19.1% CTR' }
 ];
 
 export const SKILLS: Skill[] = [
