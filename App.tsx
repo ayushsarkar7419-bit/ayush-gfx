@@ -1393,11 +1393,14 @@ const App: React.FC = () => {
                              <div className="flex justify-end text-3xl font-black text-slate-900 dark:text-white items-center gap-0.5">
                                 <span>{currency === 'INR' ? '₹' : '$'}</span>
                                 <input
-                                  type="number"
-                                  placeholder={estimatedInvestment.toString()}
+                                  type="text"
+                                  placeholder="Enter Your Price"
                                   value={customAmount}
-                                  onChange={(e) => setCustomAmount(e.target.value)}
-                                  className="w-[120px] bg-transparent text-right outline-none focus:border-b-2 border-orange-500/50 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                  onChange={(e) => {
+                                    const val = e.target.value.replace(/[^0-9]/g, '');
+                                    setCustomAmount(val);
+                                  }}
+                                  className="w-[200px] sm:w-[240px] text-lg sm:text-2xl bg-transparent text-right outline-none focus:border-b-2 border-orange-500/50 transition-colors placeholder:text-sm placeholder:font-normal placeholder:text-slate-400"
                                 />
                              </div>
                              <div className="text-[10px] text-slate-400 font-medium">Approx. Delivery: {quantity * 24} Hours</div>
